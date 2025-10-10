@@ -1,0 +1,59 @@
+from flask import Flask, render_template, request, redirect, flash
+from werkzeug.security import generate_password_hash, check_password_hash
+from flask_login import LoginManager, login_user, login_required, current_user, logout_user
+from user_class import User
+class TestDBase:
+    def getUserID(self, user_id):
+        pass
+    def getUser(self, login):
+        pass
+    def addEvent(self, name, date, time, place):
+        pass
+
+www_path = 'www'
+app = Flask(__name__, static_folder=www_path, template_folder=www_path)
+app.config["SECRET_KEY"] = "o8pjag5ny;o32g42vonny8libtfukjyj,gyukfyfkufyulgyuk"
+login_manager = LoginManager(app)
+# login_manager.login_view = 'login'
+
+
+@login_manager.user_loader
+def load_user(user_id):
+    return User(user_id, TestDBase())
+
+
+@app.route("/admin", methods=['GET', 'POST'])
+@login_required
+def admin():
+    if request.method == "POST":
+        if len(request.form.keys()) == 4:
+            TestDBase().addEvent(request.form['name'], request.form['date'], request.form['time'], request.form['place'])
+        else:
+            flash("Не все поля заполнены")
+    return render_template("add-event.html")
+
+
+@app.route("/admin/login", methods=['GET', 'POST'])
+def alogin():
+    if request.method == "POST":
+        user_in_db = TestDBase().getUser(request.form['login'])
+        if not user_in_db:
+            flash("Такого пользователя нет")
+        elif not check_password_hash(user_in_db[2], request.form['password']):
+            flash("Неверный пароль")
+        else:
+            user_to_login = User(db_user=user_in_db)
+            remember = 'device' in request.form.keys()
+            login_user(user_to_login, remember=remember)
+            return redirect("/admin")
+    return render_template("login.html")
+
+
+@app.route("/")
+@app.route("/index")
+def index():
+    return redirect("/admin/login")
+
+
+if __name__ == "__main__":
+    app.run(debug=True)
