@@ -1,4 +1,5 @@
 import sqlite3
+from werkzeug.security import generate_password_hash, check_password_hash
 
 
 class LibraryDBCreator:
@@ -19,7 +20,7 @@ class LibraryDBCreator:
     def createEventsTable(self):
         self.cursor.execute('''CREATE TABLE IF NOT EXISTS events (
                                 event_id INTEGER PRIMARY KEY AUTOINCREMENT,
-                                name TEXT NOT NULL,
+                                name_event TEXT NOT NULL,
                                 info TEXT,
                                 date TEXT NOT NULL,
                                 time TEXT NOT NULL,
@@ -30,6 +31,17 @@ class LibraryDBCreator:
                                 is_active INTEGER NOT NULL DEFAULT 1,
                                 created_by INTEGER NOT NULL,
                                 FOREIGN KEY (created_by) REFERENCES users(user_id))''')
+        self.connector.commit()
+
+    def createRegistrationsTable(self):
+        self.cursor.execute('''CREATE TABLE IF NOT EXISTS registration (
+                                id_registration INTEGER PRIMARY KEY AUTOINCREMENT,
+                                id_event INTEGER NOT NULL,
+                                full_name TEXT NOT NULL,
+                                email TEXT NOT NULL,
+                                phone_number TEXT,
+                                agreement INTEGER,
+                                FOREIGN KEY (id_event) REFERENCES events(event_id))''')
         self.connector.commit()
 
     def __del__(self):
@@ -85,7 +97,7 @@ class LibraryDB:
 
 #events_db
 
-    def addEvent(self, name, info, date, time, location, max_places, price, image, is_active=True):
+    def addEvent(self, name_event, info, date, time, location, max_places, price, image, created_by, is_active=True):
 
         self.cursor.execute('''
                 INSERT INTO events (
@@ -93,13 +105,17 @@ class LibraryDB:
                     max_places, price, image, is_active, created_by
                 ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             ''', (name_event, info, date, time, location,
-                  max_places, price, image, active, created_by))
+                  max_places, price, image, is_active, created_by))
         self.connector.commit()
         return True
 
     def getEvent(self, event_id):
         self.cursor.execute('SELECT * FROM events WHERE id_event = ?', (event_id,))
-        return self.cursor.fetchone()
+        result = self.cursor.fetchone()
+        if result and result[0]:
+            return True
+        else:
+            return False
 
     def update_event(self, event_id, name_event=None, info=None, date=None, time=None,
                      location=None, max_places=None, price=None, image=None,
@@ -149,6 +165,58 @@ class LibraryDB:
         self.connector.commit()
 
 #registration_db
+
+    def addRegistration(self, id_event, full_name, email, phone_number, agreement):
+        self.cursor.execute('SELECT event_id FROM events WHERE event_id = ?', (id_event,))
+        result = self.cursor.fetchone()
+        if not result or not result[0]:
+            return False
+
+        self.cursor.execute('''
+            INSERT INTO registration (
+                id_event, full_name, email, phone_number, agreement
+            ) VALUES (?, ?, ?, ?, ?)
+        ''', (id_event, full_name, email, phone_number, agreement))
+        self.connector.commit()
+        return True
+
+    def deleteRegistration(self, id_registration):
+        self.cursor.execute('SELECT id_registration FROM registration WHERE id_registration = ?', (id_registration,))
+        result = self.cursor.fetchone()
+        if not result or not result[0]:
+            return False
+
+        self.cursor.execute('DELETE FROM registration WHERE id_registration = ?', (id_registration,))
+        self.connector.commit()
+        return True
+
+    def updateRegistration(self, id_registration, full_name=None, email=None,
+                           phone_number=None, agreement=None):
+        fields = []
+        values = []
+
+        if full_name is not None:
+            fields.append('full_name = ?')
+            values.append(full_name)
+        if email is not None:
+            fields.append('email = ?')
+            values.append(email)
+        if phone_number is not None:
+            fields.append('phone_number = ?')
+            values.append(phone_number)
+        if agreement is not None:
+            fields.append('agreement = ?')
+            values.append(agreement)
+
+        if not fields:
+            return False
+
+        values.append(id_registration)
+        update = f"UPDATE registration SET {', '.join(fields)} WHERE id_registration = ?"
+        self.cursor.execute(update, values)
+        self.connector.commit()
+        return True
+
     def __del__(self):
         self.connector.close()
 
@@ -156,5 +224,6 @@ class LibraryDB:
 if __name__ == "__main__":
     LibraryDBCreator().createUsersTable()
     LibraryDBCreator().createEventsTable()
+    LibraryDBCreator().createRegistrationsTable()
 
 
