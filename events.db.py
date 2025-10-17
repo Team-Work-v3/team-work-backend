@@ -12,7 +12,8 @@ class LibraryDBCreator:
                                 user_id INTEGER PRIMARY KEY AUTOINCREMENT,
                                 login TEXT NOT NULL,
                                 password TEXT NOT NULL,
-                                role TEXT NOT NULL)''')
+                                access_level TEXT NOT NULL,
+                                is_active INTEGER NOT NULL DEFAULT 1)''')
         self.connector.commit()
 
     def createEventsTable(self):
@@ -49,6 +50,32 @@ class LibraryDB:
         if result:
             return result[0]
         return None
+
+    def isUserActive(self, user_id):
+        self.cursor.execute('SELECT is_active FROM users WHERE user_id = ?', (user_id,))
+        result = self.cursor.fetchone()
+        if result and result[0]:
+            return True
+        else:
+            return False
+
+    def getAccessLevel(self, user_id):
+        self.cursor.execute('SELECT access_level FROM users WHERE user_id = ?', (user_id,))
+        result = self.cursor.fetchone()
+        if result and result[0]:
+            return True
+        else:
+            return False
+
+    def addUser(self, login, password, access_level, is_active=True):
+        password_hash = generate_password_hash(password)
+
+        self.cursor.execute('''
+            INSERT INTO users (login, password_hash, access_level, is_active)
+            VALUES (?, ?, ?, ?)
+        ''', (login, password_hash, access_level, is_active))
+
+        self.connector.commit()
 
     def addEvent(self, user_id, name, description, date, time, location):
 
