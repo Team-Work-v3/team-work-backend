@@ -1,4 +1,4 @@
 from flask import Blueprint, jsonify, request
-from dbToDO import DataBase
+from events import LibraryDB
 
-api_post = Blueprint('api_post', __name__, url_prefix='/post')
+api_post = Blueprint('api_post', __name__, url_prefix='/api')

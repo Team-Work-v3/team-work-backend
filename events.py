@@ -27,6 +27,7 @@ class LibraryDBCreator:
                                 location TEXT NOT NULL,
                                 max_places INTEGER NOT NULL,
                                 price REAL NOT NULL,
+                                category TEXT,
                                 image TEXT,
                                 is_active INTEGER NOT NULL DEFAULT 1,
                                 created_by INTEGER NOT NULL,
@@ -97,15 +98,15 @@ class LibraryDB:
 
 #events_db
 
-    def addEvent(self, name_event, info, date, time, location, max_places, price, image, created_by, is_active=True):
+    def addEvent(self, name_event, info, date, time, location, max_places, price, category, image, created_by, is_active=True):
 
         self.cursor.execute('''
                 INSERT INTO events (
                     name_event, info, date, time, location,
-                    max_places, price, image, is_active, created_by
+                    max_places, price, category, image, is_active, created_by
                 ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             ''', (name_event, info, date, time, location,
-                  max_places, price, image, is_active, created_by))
+                  max_places, price, category, image, is_active, created_by))
         self.connector.commit()
         return True
 
@@ -118,7 +119,7 @@ class LibraryDB:
             return False
 
     def update_event(self, event_id, name_event=None, info=None, date=None, time=None,
-                     location=None, max_places=None, price=None, image=None,
+                     location=None, max_places=None, price=None, category=None, image=None,
                      is_active=None, created_by=None):
 
         fields = []
@@ -145,6 +146,9 @@ class LibraryDB:
         if price is not None:
             fields.append('price = ?')
             values.append(price)
+        if category is not None:
+            fields.append('category = ?')
+            values.append(category)
         if image is not None:
             fields.append('image = ?')
             values.append(image)
