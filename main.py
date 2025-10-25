@@ -20,9 +20,10 @@ def load_user(user_id):
 @login_required
 def admin():
     if request.method == "POST":
-        print(request.form.keys())
-        if not False in [i in request.form.keys() for i in ['name', 'date', 'time', 'place']]:
-            LibraryDB().addEvent(request.form['name'], None, request.form['date'], request.form['time'], request.form['place'], 0, 0, '', current_user[1])
+        if not False in [i in request.form.keys() and request.form[i] for i in ['name', 'date', 'time', 'place']]:
+            LibraryDB().addEvent(request.form['name'], None, request.form['date'], request.form['time'],
+                                 request.form['place'], 0, 0, None, '', current_user[1])
+            #------------- заполнить по поступлению
         else:
             flash("Не все поля заполнены")
     return render_template("add-event.html")
@@ -31,13 +32,11 @@ def admin():
 @app.route("/admin/login", methods=['GET', 'POST'])
 def alogin():
     if request.method == "POST":
-        print(request.form.keys())
         if not False in [i in request.form.keys() and request.form[i] for i in ['login', 'password']]:
             user_in_db = LibraryDB().getUserByLogin(request.form['login'])
-            print(user_in_db)
             if not user_in_db:
                 flash("Такого пользователя нет")
-            elif check_password_hash(user_in_db[2], request.form['password']):
+            elif not check_password_hash(user_in_db[2], request.form['password']):
                 flash("Неверный пароль")
             else:
                 user_to_login = User(db_user=user_in_db)
