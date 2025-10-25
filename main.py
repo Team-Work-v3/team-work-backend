@@ -30,7 +30,8 @@ def admin():
 @app.route("/admin/login", methods=['GET', 'POST'])
 def alogin():
     if request.method == "POST":
-        if not False in [i in request.form.keys() for i in ['login', 'password']]:
+        print(request.form.keys())
+        if not False in [i in request.form.keys() and request.form[i] for i in ['login', 'password']]:
             user_in_db = LibraryDB().getUserByLogin(request.form['login'])
             print(user_in_db)
             if not user_in_db:

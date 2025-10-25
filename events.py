@@ -76,7 +76,7 @@ class LibraryDB:
         self.cursor.execute('SELECT * FROM users WHERE login = ?', (login,))
         result = self.cursor.fetchone()
         if result:
-            return result[0]
+            return result
         return None
 
     def isUserActive(self, user_id):
