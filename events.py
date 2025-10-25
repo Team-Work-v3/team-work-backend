@@ -12,7 +12,7 @@ class LibraryDBCreator:
         self.cursor.execute('''CREATE TABLE IF NOT EXISTS users (
                                 user_id INTEGER PRIMARY KEY AUTOINCREMENT,
                                 login TEXT NOT NULL,
-                                password TEXT NOT NULL,
+                                password_hash TEXT NOT NULL,
                                 access_level TEXT NOT NULL,
                                 is_active INTEGER NOT NULL DEFAULT 1)''')
         self.connector.commit()
@@ -70,7 +70,7 @@ class LibraryDB:
         self.cursor.execute('SELECT * FROM users WHERE user_id = ?', (user_id,))
         result = self.cursor.fetchone()
         if result:
-            return result[0]
+            return result
         return None
 
     def getUserByLogin(self, login):
@@ -91,8 +91,8 @@ class LibraryDB:
     def getAccessLevel(self, user_id):
         self.cursor.execute('SELECT access_level FROM users WHERE user_id = ?', (user_id,))
         result = self.cursor.fetchone()
-        if result and result[0]:
-            return True
+        if result:
+            return result[0]
         else:
             return False
 
@@ -118,10 +118,9 @@ class LibraryDB:
         else:
             return False
 
-    def update_event(self, event_id, name_event=None, info=None, date=None, time=None,
+    def updateEvent(self, event_id, name_event=None, info=None, date=None, time=None,
                      location=None, max_places=None, price=None, category=None, image=None,
                      is_active=None, created_by=None):
-
         fields = []
         values = []
 

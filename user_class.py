@@ -6,4 +6,4 @@ class User(UserMixin):
         if db_user:
             self.user = db_user
         else:
-            self.user = dbase.getUserID(user_id)
+            self.user = dbase.getUser(user_id)
