@@ -1,2 +1,9 @@
 library_site.db
 .idea
+__pycache__/
+*.py[oc]
+build/
+wheels/
+*.egg-info
+.venv/
+www/
