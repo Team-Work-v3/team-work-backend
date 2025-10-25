@@ -10,6 +10,9 @@ app.config["SECRET_KEY"] = "o8pjag5ny;o32g42vonny8libtfukjyj,gyukfyfkufyulgyuk"
 login_manager = LoginManager(app)
 # login_manager.login_view = 'login'
 
+from api_get import api_get
+from api_post import api_post
+
 
 @login_manager.user_loader
 def load_user(user_id):
