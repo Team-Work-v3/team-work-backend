@@ -66,7 +66,7 @@ class LibraryDB:
         self.connector.commit()
 
     def getUserID(self, user_id):
-        self.cursor.execute('SELECT user_id FROM users WHERE user_id = ?', (user_id,))
+        self.cursor.execute('SELECT * FROM users WHERE user_id = ?', (user_id,))
         result = self.cursor.fetchone()
         if result:
             return result[0]
