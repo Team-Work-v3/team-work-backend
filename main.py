@@ -4,12 +4,15 @@ from flask_login import LoginManager, login_user, login_required, current_user, 
 from user_class import User
 from events import LibraryDB
 
+from api_get import api_get
+
 www_path = 'www'
 app = Flask(__name__, static_folder=www_path, template_folder=www_path)
 app.config["SECRET_KEY"] = "o8pjag5ny;o32g42vonny8libtfukjyj,gyukfyfkufyulgyuk"
 login_manager = LoginManager(app)
 # login_manager.login_view = 'login'
 
+app.register_blueprint(api_get)
 
 @login_manager.user_loader
 def load_user(user_id):
