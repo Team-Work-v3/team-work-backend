@@ -7,16 +7,7 @@ api_get = Blueprint('api_get', __name__, url_prefix='/api')
 @api_get.route("/getEvents", methods=["GET"])
 @login_required
 def get_events():
-    db = LibraryDB()
-    user_id = current_user.id
-
-    rows = db.cursor.execute('''
-        SELECT event_id, name_event, info, date, time, location,
-               max_places, price, category, image, is_active, created_by
-        FROM events
-        WHERE created_by = ?
-    ''', (user_id,)).fetchall()
-
+    rows = LibraryDB().getEvents()
     result = []
     for row in rows:
         result.append({

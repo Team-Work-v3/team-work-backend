@@ -1,5 +1,6 @@
 library_site.db
 .idea
+.idea/
 __pycache__/
 *.py[oc]
 build/
@@ -8,3 +9,4 @@ wheels/
 .venv/
 www/
 www
+free
