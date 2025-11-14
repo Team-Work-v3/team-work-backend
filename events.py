@@ -1,7 +1,6 @@
 import sqlite3
 from werkzeug.security import generate_password_hash, check_password_hash
 
-
 class LibraryDBCreator:
     def __init__(self, db_name='library_site.db'):
         self.db_name = db_name
@@ -104,7 +103,7 @@ class LibraryDB:
                 INSERT INTO events (
                     name_event, info, date, time, location,
                     max_places, price, category, image, is_active, created_by
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             ''', (name_event, info, date, time, location,
                   max_places, price, category, image, is_active, created_by))
         self.connector.commit()
@@ -118,9 +117,19 @@ class LibraryDB:
         else:
             return False
 
+    def getEvents(self):
+        rows = self.cursor.execute('''
+            SELECT event_id, name_event, info, date, time, location,
+                   max_places, price, category, image, is_active, created_by
+            FROM events
+        ''').fetchall()
+        return rows
+
+
+
     def updateEvent(self, event_id, name_event=None, info=None, date=None, time=None,
                      location=None, max_places=None, price=None, category=None, image=None,
-                     is_active=None, created_by=None):
+                     created_by=None, is_active=None):
         fields = []
         values = []
 
@@ -152,7 +161,7 @@ class LibraryDB:
             fields.append('image = ?')
             values.append(image)
         if is_active is not None:
-            fields.append('active = ?')
+            fields.append('is_active = ?')
             values.append(is_active)
         if created_by is not None:
             fields.append('created_by = ?')
@@ -162,10 +171,13 @@ class LibraryDB:
             return False
 
         values.append(event_id)
-        update = f"UPDATE events SET {', '.join(fields)} WHERE id_event = ?"
+        update = f"UPDATE events SET {', '.join(fields)} WHERE event_id = ?"
 
-        self.cursor.execute(update, values)
+        print(update)
+        print(values)
+        self.cursor.execute(update, (name_event, info, date, time, location, max_places, price,category, image, is_active, created_by, event_id))
         self.connector.commit()
+        return True
 
 #registration_db
 
@@ -228,5 +240,7 @@ if __name__ == "__main__":
     LibraryDBCreator().createUsersTable()
     LibraryDBCreator().createEventsTable()
     LibraryDBCreator().createRegistrationsTable()
+    #LibraryDB().addEvent("test", "info", "2025-12-22", "14:00", "123", 25, 100, "/123/123", "admin", "", 1)
+    #LibraryDB().updateEvent(1, "test1234", "", "", "", "123", 25, 100, "/123/123", "admin", "", 1)
 
 
