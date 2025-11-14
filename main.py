@@ -14,7 +14,7 @@ login_manager.init_app(app)
 # login_manager.login_view = 'login'
 
 app.register_blueprint(api_get)
-
+app.register_blueprint(api_post)
 @login_manager.user_loader
 def load_user(user_id):
     return User(user_id, LibraryDB())

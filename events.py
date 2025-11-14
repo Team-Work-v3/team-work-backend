@@ -123,6 +123,7 @@ class LibraryDB:
                    max_places, price, category, image, is_active, created_by
             FROM events
         ''').fetchall()
+        return rows
 
 
 
@@ -176,6 +177,7 @@ class LibraryDB:
         print(values)
         self.cursor.execute(update, (name_event, info, date, time, location, max_places, price,category, image, is_active, created_by, event_id))
         self.connector.commit()
+        return True
 
 #registration_db
 
@@ -235,10 +237,10 @@ class LibraryDB:
 
 
 if __name__ == "__main__":
-    #LibraryDBCreator().createUsersTable()
-    #LibraryDBCreator().createEventsTable()
-    #LibraryDBCreator().createRegistrationsTable()
+    LibraryDBCreator().createUsersTable()
+    LibraryDBCreator().createEventsTable()
+    LibraryDBCreator().createRegistrationsTable()
     #LibraryDB().addEvent("test", "info", "2025-12-22", "14:00", "123", 25, 100, "/123/123", "admin", "", 1)
-    LibraryDB().updateEvent(1, "test123", "", "", "", "123", 25, 100, "/123/123", "admin", "", 1)
+    #LibraryDB().updateEvent(1, "test1234", "", "", "", "123", 25, 100, "/123/123", "admin", "", 1)
 
 
