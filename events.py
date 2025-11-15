@@ -129,7 +129,7 @@ class LibraryDB:
 
     def updateEvent(self, event_id, name_event=None, info=None, date=None, time=None,
                      location=None, max_places=None, price=None, category=None, image=None,
-                     is_active=None, created_by=None):
+                     created_by=None, is_active=None):
         fields = []
         values = []
 
