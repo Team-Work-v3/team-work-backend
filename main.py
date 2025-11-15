@@ -5,6 +5,7 @@ from user_class import User
 from events import LibraryDB
 from api_post import api_post
 from api_get import api_get
+from utils import validate
 
 www_path = 'www'
 app = Flask(__name__, static_folder=www_path, static_url_path="", template_folder=www_path)
@@ -25,7 +26,8 @@ def load_user(user_id):
 @login_required
 def admin():
     if request.method == "POST":
-        if not False in [i in request.form.keys() and request.form[i] for i in ['name', 'date', 'time', 'place']]:
+        to_check = [('name', str), ('date', str), ('time', str), ('place', str)]
+        if False not in [i[0] in request.form.keys() and validate(request.form[i[0]], i[1]) for i in to_check]:
             LibraryDB().addEvent(request.form['name'], None, request.form['date'], request.form['time'],
                                  request.form['place'], 0, 0, None, '', current_user[1])
             #------------- заполнить по поступлению
@@ -37,7 +39,7 @@ def admin():
 @app.route("/admin/login", methods=['GET', 'POST'])
 def alogin():
     if request.method == "POST":
-        if not False in [i in request.form.keys() and request.form[i] for i in ['login', 'password']]:
+        if False not in [i in request.form.keys() and request.form[i] for i in ['login', 'password']]:
             user_in_db = LibraryDB().getUserByLogin(request.form['login'])
             if not user_in_db:
                 flash("Такого пользователя нет")

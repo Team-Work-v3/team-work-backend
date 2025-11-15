@@ -2,6 +2,7 @@ from flask import Blueprint, jsonify, request
 from flask_login import login_required, current_user
 from werkzeug.security import check_password_hash
 from events import LibraryDB
+from utils import validate
 
 api_post = Blueprint('api_post', __name__, url_prefix='/api')
 
@@ -25,8 +26,8 @@ def check_admin():
 @login_required
 def add_event():
     data = request.get_json()
-    if False not in [i in data.keys() and data[i] for i in ['name', 'date', 'number-of-seats', 'price',
-                                                                    'category', 'img']]:
+    to_check = [('name', str), ('date', str), ('number-of-seats', int), ('price', float), ('category', str), ('img', str)]
+    if False not in [i[0] in data.keys() and validate(data[i[0]], i[1]) for i in to_check]:
         LibraryDB().addEvent(data['name'], None, data['date'], data['time'],
                              '', data['number-of-seats'], data['price'], data['category'],
                              data['img'], current_user.user[1])
