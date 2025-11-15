@@ -28,11 +28,16 @@ for rule in rules_to_remove:
 app.register_blueprint(api_get)
 app.register_blueprint(api_post)
 
+@app.route("/<path:filepath>.html")
+@login_required
+def html_router(filepath):
+    template_name = f"{filepath}.html"
+    return render_template(template_name)
+
 
 @login_manager.user_loader
 def load_user(user_id):
     return User(user_id, LibraryDB())
-
 
 @app.route("/admin", methods=['GET', 'POST'])
 @login_required
