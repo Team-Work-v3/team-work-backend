@@ -35,6 +35,10 @@ def admin():
             flash("Не все поля заполнены")
     return render_template("add-event.html")
 
+@app.route("/admin/members.html")
+@login_required
+def tester():
+    return "ohh no"
 
 @app.route("/admin/login", methods=['GET', 'POST'])
 def alogin():
