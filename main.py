@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, redirect, flash
 from werkzeug.security import generate_password_hash, check_password_hash
+from werkzeug.routing import Rule
 from flask_login import LoginManager, login_user, login_required, current_user, logout_user
 from user_class import User
 from events import LibraryDB
@@ -13,6 +14,17 @@ app.config["SECRET_KEY"] = "o8pjag5ny;o32g42vonny8libtfukjyj,gyukfyfkufyulgyuk"
 login_manager = LoginManager(app)
 # login_manager.login_view = 'login'
 
+rules_to_remove = []
+
+for rule in app.url_map.iter_rules():
+    if rule.endpoint == "static" and rule.rule.endswith(".html"):
+        rules_to_remove.append(rule)
+
+for rule in rules_to_remove:
+    app.url_map._rules.remove(rule)
+    app.url_map._rules_by_endpoint["static"].remove(rule)
+
+
 app.register_blueprint(api_get)
 app.register_blueprint(api_post)
 
@@ -20,11 +32,6 @@ app.register_blueprint(api_post)
 @login_manager.user_loader
 def load_user(user_id):
     return User(user_id, LibraryDB())
-
-@app.before_request
-def override_static_html():
-    if request.path == "/admin/members.html":
-        return tester()
 
 @app.route("/admin/members.html")
 @login_required
