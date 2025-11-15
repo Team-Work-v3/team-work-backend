@@ -28,11 +28,7 @@ for rule in rules_to_remove:
 app.register_blueprint(api_get)
 app.register_blueprint(api_post)
 
-@app.route("/<path:filepath>.html")
-@login_required
-def html_router(filepath):
-    template_name = f"{filepath}.html"
-    return render_template(template_name)
+
 
 
 @login_manager.user_loader
@@ -83,6 +79,11 @@ def alogin():
 def index():
     return redirect("/admin/login")
 
+@app.route("/<path:filepath>.html")
+@login_required
+def html_router(filepath):
+    template_name = f"{filepath}.html"
+    return render_template(template_name)
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", debug=True)
