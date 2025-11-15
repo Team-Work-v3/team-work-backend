@@ -33,10 +33,6 @@ app.register_blueprint(api_post)
 def load_user(user_id):
     return User(user_id, LibraryDB())
 
-@app.route("/admin/members.html")
-@login_required
-def tester():
-    return "ohh no"
 
 @app.route("/admin", methods=['GET', 'POST'])
 @login_required
