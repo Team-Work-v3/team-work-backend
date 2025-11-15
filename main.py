@@ -47,7 +47,9 @@ def alogin():
                 print("none")
             elif not check_password_hash(user_in_db[2], request.form['password']):
                 flash("Неверный пароль")
-                print(user_in_db[2], request.form['password'])
+                print(check_password_hash(user_in_db[2], request.form['password']))
+                print(user_in_db[2])
+                print(request.form['password'])
             else:
                 user_to_login = User(db_user=user_in_db)
                 remember = 'device' in request.form.keys()
