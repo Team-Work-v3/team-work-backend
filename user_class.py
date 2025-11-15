@@ -7,3 +7,6 @@ class User(UserMixin):
             self.user = db_user
         else:
             self.user = dbase.getUser(user_id)
+
+    def get_id(self):
+        return self.user[0]
