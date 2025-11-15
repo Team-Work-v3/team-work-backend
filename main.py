@@ -12,7 +12,7 @@ www_path = 'www'
 app = Flask(__name__, static_folder=www_path, static_url_path="", template_folder=www_path)
 app.config["SECRET_KEY"] = "o8pjag5ny;o32g42vonny8libtfukjyj,gyukfyfkufyulgyuk"
 login_manager = LoginManager(app)
-# login_manager.login_view = 'login'
+login_manager.login_view = 'alogin'
 
 rules_to_remove = []
 
