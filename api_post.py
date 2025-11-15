@@ -1,8 +1,9 @@
 from flask import Blueprint, jsonify, request
-from flask_login import login_required, current_user
+from flask_login import login_required, current_user, login_user
 from werkzeug.security import check_password_hash
 from events import LibraryDB
-from utils import validate
+from user_class import User
+from utils import validate_greedy
 
 api_post = Blueprint('api_post', __name__, url_prefix='/api')
 
@@ -10,13 +11,17 @@ api_post = Blueprint('api_post', __name__, url_prefix='/api')
 @api_post.route("/checkAdmin", methods=["POST"])
 def check_admin():
     data = request.get_json()
-    if not False in [i in data.keys() and data[i] for i in ['login', 'password']]:
+    to_check = [('login', str), ('password', str)]
+    if validate_greedy(to_check, data):
         user_in_db = LibraryDB().getUserByLogin(data['login'])
         if not user_in_db:
             return jsonify({'message': 'error', 'context': 'not found'})
         elif not check_password_hash(user_in_db[2], data['password']):
             return jsonify({'message': 'error', 'context': 'wrong password'})
         else:
+            user_to_login = User(db_user=user_in_db)
+            remember = 'device' in request.form.keys()
+            login_user(user_to_login, remember=remember)
             return jsonify({'message': 'success'})
     else:
         return jsonify({'message': 'error', 'context': 'missing fields'})
@@ -27,7 +32,7 @@ def check_admin():
 def add_event():
     data = request.get_json()
     to_check = [('name', str), ('date', str), ('number-of-seats', int), ('price', float), ('category', str), ('img', str)]
-    if False not in [i[0] in data.keys() and validate(data[i[0]], i[1]) for i in to_check]:
+    if validate_greedy(to_check, data):
         LibraryDB().addEvent(data['name'], None, data['date'], data['time'],
                              '', data['number-of-seats'], data['price'], data['category'],
                              data['img'], current_user.user[1])
@@ -40,7 +45,8 @@ def add_event():
 @login_required
 def edit_event():
     data = request.get_json()
-    if False not in [i in data.keys() for i in ['name', 'date', 'number-of-seats', 'price', 'category', 'img']]:
+    to_check = [('name', str), ('date', str), ('number-of-seats', int), ('price', float), ('category', str), ('img', str)]
+    if validate_greedy(to_check, data, False):
         LibraryDB().updateEvent('id......', data['name'], None, data['date'], data['time'],
                              '', data['number-of-seats'], data['price'], data['category'], data['img'], current_user[1])
         # ------------- исправить по поступлению
