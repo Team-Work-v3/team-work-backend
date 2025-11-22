@@ -80,6 +80,30 @@ def admin_login():
     return render_template("login.html")
 
 
+@app.route("/admin/events", methods=['GET'])
+@login_required
+def admin_events():
+    return render_template("admin/events.html")
+
+
+@app.route("/admin/analitic", methods=['GET'])
+@login_required
+def admin_analitic():
+    return render_template("admin/analitic.html")
+
+
+@app.route("/admin/members", methods=['GET'])
+@login_required
+def admin_members():
+    return render_template("admin/members.html")
+
+
+@app.route("/admin/other", methods=['GET'])
+@login_required
+def admin_other():
+    return render_template("admin/other.html")
+
+
 @app.route("/")
 @app.route("/index")
 def index():
