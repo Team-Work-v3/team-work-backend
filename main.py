@@ -44,10 +44,14 @@ def admin():
 @login_required
 def admin_add():
     if request.method == "POST":
-        to_check = [('name', str), ('date', str), ('time', str), ('place', int)]
+        print(1)
+        to_check = [('name-event', str), ('description-event', str), ('date-event', str), ('time-event', str),
+                    ('location-event', str), ('price-event', float), ('seats-event', int)]
         if validate_greedy(to_check, request.form):
-            LibraryDB().addEvent(request.form['name'], None, request.form['date'], request.form['time'],
-                                 '', request.form['place'], 0, None, '', current_user[1])
+            print(2)
+            LibraryDB().addEvent(request.form['name-event'], request.form['description-event'],
+                                 request.form['date-event'], request.form['time-event'], request.form['location-event'],
+                                 request.form['seats-event'], request.form['price-event'], None, '', current_user.user[1])
             #------------- заполнить по поступлению
         else:
             pass

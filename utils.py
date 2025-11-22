@@ -1,7 +1,7 @@
 def validate_object(object, object_type, min_l=1, max_l=5000, restricted=''):
-    if object_type == int and isinstance(type(object), str) and object.isdigit():
+    if object_type == int and isinstance(object, str) and object.isdigit():
         object = int(object)
-    if object_type == float and isinstance(type(object), str) and object.isdigit():
+    if object_type == float and isinstance(object, str) and object.isdigit():
         object = float(object)
     if min_l == 0 and (object is None or object == 0 or object == ''):
         return True
@@ -12,5 +12,8 @@ def validate_object(object, object_type, min_l=1, max_l=5000, restricted=''):
 
 
 def validate_greedy(to_check, dict_object, cant_be_empty=True):
+    print(dict_object.keys())
+    print([i[0] in dict_object.keys() and validate_object(dict_object[i[0]], i[1], int(cant_be_empty))
+                         for i in to_check])
     return False not in [i[0] in dict_object.keys() and validate_object(dict_object[i[0]], i[1], int(cant_be_empty))
                          for i in to_check]
