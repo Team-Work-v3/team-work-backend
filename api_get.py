@@ -1,5 +1,5 @@
-from flask import Blueprint
-from flask_login import login_required, current_user
+from flask import Blueprint, jsonify
+from flask_login import login_required
 from events import LibraryDB
 
 api_get = Blueprint('api_get', __name__, url_prefix='/api')
@@ -24,5 +24,4 @@ def get_events():
             "is_active": row[10],
             "created_by": row[11]
         })
-
-    return { "events": result }
+    return jsonify({"events": result})
