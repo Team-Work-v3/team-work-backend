@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, redirect, flash
 from werkzeug.security import generate_password_hash, check_password_hash
+from werkzeug.utils import secure_filename
 from werkzeug.routing import Rule
 from flask_login import LoginManager, login_user, login_required, current_user, logout_user
 from user_class import User
@@ -84,6 +85,13 @@ def admin_login():
     return render_template("login.html")
 
 
+@app.route("/admin/logout", methods=['GET'])
+@login_required
+def admin_logout():
+    logout_user()
+    return redirect('/admin/login')
+
+
 @app.route("/admin/events", methods=['GET'])
 @login_required
 def admin_events():
@@ -108,6 +116,16 @@ def admin_other():
     return render_template("admin/other.html")
 
 
+@app.route("/admin/test", methods=['GET', 'POST'])
+@login_required
+def imgtest():
+    if request.method == "POST":
+        file = request.files['images-events']
+        file.save(f'imgs/{secure_filename(file.filename)}')
+
+    return render_template("imgtest.html")
+
+
 @app.route("/")
 @app.route("/index")
 def index():
@@ -116,7 +134,7 @@ def index():
 @app.route("/<path:filepath>.html")
 @login_required
 def html_router(filepath):
-    template_name = f"admin/{filepath}.html"
+    template_name = f"{filepath}.html"
     return render_template(template_name)
 
 if __name__ == "__main__":
