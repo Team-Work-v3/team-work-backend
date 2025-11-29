@@ -44,6 +44,16 @@ class LibraryDBCreator:
                                 FOREIGN KEY (id_event) REFERENCES events(event_id))''')
         self.connector.commit()
 
+    def createImageTable(self):
+        self.cursor.execute('''CREATE TABLE IF NOT EXISTS images (
+                                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                                id_event INTEGER NOT NULL,
+                                original_name TEXT NOT NULL,
+                                hash_name TEXT NOT NULL UNIQUE,
+                                url TEXT NOT NULL,
+                                FOREIGN KEY (event_id) REFERENCES events(event_id))''')
+        self.connector.commit()
+
     def __del__(self):
         self.connector.close()
 
