@@ -57,7 +57,8 @@ def admin_add():
         else:
             pass
             # flash("Не все поля заполнены")
-    return render_template("admin/add.html")
+    # return render_template("admin/add.html")
+    return redirect("admin/events.html")
 
 
 @app.route("/admin/login", methods=['GET', 'POST'])
@@ -129,7 +130,7 @@ def imgtest():
 @app.route("/")
 @app.route("/index")
 def index():
-    return render_template("index.html")
+    return render_template("index/index.html")
 
 @app.route("/<path:filepath>.html")
 @login_required
