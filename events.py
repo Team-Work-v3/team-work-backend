@@ -49,7 +49,7 @@ class LibraryDBCreator:
                                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                                 id_event INTEGER NOT NULL,
                                 original_name TEXT NOT NULL,
-                                hash_name TEXT NOT NULL UNIQUE,
+                                unique_name TEXT NOT NULL UNIQUE,
                                 url TEXT NOT NULL,
                                 FOREIGN KEY (event_id) REFERENCES events(event_id))''')
         self.connector.commit()
