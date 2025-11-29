@@ -242,5 +242,25 @@ if __name__ == "__main__":
     LibraryDBCreator().createRegistrationsTable()
     #LibraryDB().addEvent("test", "info", "2025-12-22", "14:00", "123", 25, 100, "/123/123", "admin", "", 1)
     #LibraryDB().updateEvent(1, "test1234", "", "", "", "123", 25, 100, "/123/123", "admin", "", 1)
+    LibraryDB().addEvent("event1", "Конференция по искусственному интеллекту.", "2026-01-15", "10:00",
+                         "Актовый зал университета", 50, 200, "/events/ai", "admin", "", 1)
+    LibraryDB().addEvent("event2", "Фестиваль уличной еды.", "2026-02-02", "12:30", "Центральная площадь", 100, 500,
+                         "/events/foodfest", "admin", "", 1)
+    LibraryDB().addEvent("event3", "Выставка современного искусства.", "2026-03-10", "11:00", "Городская галерея", 30,
+                         150, "/events/art", "admin", "", 1)
+    LibraryDB().addEvent("event4", "Турнир по шахматам.", "2026-04-05", "16:00", "Дом культуры", 20, 80,
+                         "/events/chess", "admin", "", 1)
+    LibraryDB().addEvent("event5", "Концерт классической музыки.", "2026-05-20", "19:30", "Филармония", 60, 300,
+                         "/events/classic", "admin", "", 1)
+    LibraryDB().addEvent("event6", "Литературный вечер поэзии.", "2026-06-12", "18:00", "Библиотека им. Пушкина", 40,
+                         120, "/events/poetry", "admin", "", 1)
+    LibraryDB().addEvent("event7", "Спортивный марафон.", "2026-07-01", "09:00", "Городской стадион", 200, 1000,
+                         "/events/marathon", "admin", "", 1)
+    LibraryDB().addEvent("event8", "Кинофестиваль документальных фильмов.", "2026-08-18", "17:00",
+                         "Кинотеатр «Октябрь»", 70, 250, "/events/filmfest", "admin", "", 1)
+    LibraryDB().addEvent("event9", "Ярмарка ремесел и хендмейда.", "2026-09-25", "13:00", "Выставочный центр", 80, 400,
+                         "/events/crafts", "admin", "", 1)
+    LibraryDB().addEvent("event10", "Семинар по личным финансам.", "2026-10-30", "15:00", "Конференц-зал бизнес-центра",
+                         25, 100, "/events/finance", "admin", "", 1)
 
 
