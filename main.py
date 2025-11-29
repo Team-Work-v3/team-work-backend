@@ -57,8 +57,9 @@ def admin_add():
         else:
             pass
             # flash("Не все поля заполнены")
-    # return render_template("admin/add.html")
-    return redirect("admin/events.html")
+        return redirect("/admin/events")
+    return render_template("admin/add.html")
+
 
 
 @app.route("/admin/login", methods=['GET', 'POST'])
