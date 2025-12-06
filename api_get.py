@@ -24,3 +24,21 @@ def get_events():
             "created_by": row[11]
         })
     return jsonify({"events": result})
+
+
+@api_get.route("/getShortenedEvents", methods=["GET"])
+def get_shortened_events():
+    rows = LibraryDB().getEvents()
+    result = []
+    for row in rows:
+        result.append({
+            "event_id": row[0],
+            "name_event": row[1],
+            "date": row[3],
+            "time": row[4],
+            "price": row[7],
+            "category": row[8],
+            "image": row[9],
+            "is_active": row[10],
+        })
+    return jsonify({"events": result})

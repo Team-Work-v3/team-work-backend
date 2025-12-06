@@ -47,12 +47,14 @@ def admin_add():
     if request.method == "POST":
         print(1)
         to_check = [('name-event', str), ('description-event', str), ('date-event', str), ('time-event', str),
-                    ('location-event', str), ('price-event', float), ('seats-event', int)]
+                    ('location-event', str), ('price-event', float), ('event-category', str), ('seats-event', int),
+                    ('organizers-event', str), ('program-event', str), ('fullDescription-event', str)]
         if validate_greedy(to_check, request.form):
             print(2)
             LibraryDB().addEvent(request.form['name-event'], request.form['description-event'],
                                  request.form['date-event'], request.form['time-event'], request.form['location-event'],
-                                 request.form['seats-event'], request.form['price-event'], None, '', current_user.user[1])
+                                 request.form['seats-event'], request.form['price-event'], request.form['event-category'],
+                                 '', current_user.user[1])
             #------------- заполнить по поступлению
         else:
             pass
@@ -135,8 +137,9 @@ def index():
 
 
 @app.route("/event/<eid>")
-def event():
-    return render_template("index/index.html")
+def event(eid):
+    return eid
+
 
 @app.route("/<path:filepath>.html")
 @login_required
