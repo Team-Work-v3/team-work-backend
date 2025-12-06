@@ -132,8 +132,12 @@ def imgtest():
 
 @app.route("/")
 @app.route("/index")
-@app.route("/event/<eid>")
 def index():
+    return render_template("index/index.html")
+
+
+@app.route("/event/<eid>")
+def event(eid):
     return render_template("index/index.html")
 
 
