@@ -27,6 +27,32 @@ def check_admin():
         return jsonify({'message': 'error', 'context': 'missing fields'})
 
 
+@api_post.route("/getEvent", methods=["POST"])
+def get_event():
+    data = request.get_json()
+    to_check = [('id', int)]
+    if validate_greedy(to_check, data, False):
+        row = LibraryDB().getEvent(data['id'])
+        if not row:
+            return jsonify({'message': 'error', 'context': 'not found'})
+        return jsonify({
+            "event_id": row[0],
+            "name_event": row[1],
+            "info": row[2],
+            "date": row[3],
+            "time": row[4],
+            "location": row[5],
+            "max_places": row[6],
+            "price": row[7],
+            "category": row[8],
+            "image": row[9],
+            "is_active": row[10],
+            "created_by": row[11]
+        })
+    else:
+        return jsonify({'message': 'error', 'context': 'missing fields'})
+
+
 @api_post.route("/addEvents", methods=["POST"])
 @login_required
 def add_event():
@@ -37,6 +63,7 @@ def add_event():
                              '', data['number-of-seats'], data['price'], data['category'],
                              data['img'], current_user.user[1])
         # ------------- заполнить по поступлению
+        return jsonify({'message': 'success'})
     else:
         return jsonify({'message': 'error', 'context': 'missing fields'})
 
@@ -50,6 +77,7 @@ def edit_event():
         LibraryDB().updateEvent('id......', data['name'], None, data['date'], data['time'],
                              '', data['number-of-seats'], data['price'], data['category'], data['img'], current_user[1])
         # ------------- исправить по поступлению
+        return jsonify({'message': 'success'})
     else:
         return jsonify({'message': 'error', 'context': 'missing fields'})
 

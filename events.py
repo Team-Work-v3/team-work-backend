@@ -120,10 +120,10 @@ class LibraryDB:
         return True
 
     def getEvent(self, event_id):
-        self.cursor.execute('SELECT * FROM events WHERE id_event = ?', (event_id,))
+        self.cursor.execute('SELECT * FROM events WHERE event_id = ?', (event_id,))
         result = self.cursor.fetchone()
         if result and result[0]:
-            return True
+            return result
         else:
             return False
 
