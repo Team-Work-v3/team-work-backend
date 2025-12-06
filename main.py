@@ -133,6 +133,11 @@ def imgtest():
 def index():
     return render_template("index/index.html")
 
+
+@app.route("/event/<eid>")
+def event():
+    return render_template("index/index.html")
+
 @app.route("/<path:filepath>.html")
 @login_required
 def html_router(filepath):

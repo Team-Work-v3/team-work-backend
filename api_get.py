@@ -1,13 +1,10 @@
 from flask import Blueprint, jsonify
 from flask_login import login_required
 from events import LibraryDB
-from flask_cors import cross_origin
 
 api_get = Blueprint('api_get', __name__, url_prefix='/api')
 
 @api_get.route("/getEvents", methods=["GET"])
-@login_required
-@cross_origin()
 def get_events():
     rows = LibraryDB().getEvents()
     result = []
