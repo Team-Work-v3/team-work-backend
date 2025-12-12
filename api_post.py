@@ -38,16 +38,19 @@ def get_event():
         return jsonify({
             "event_id": row[0],
             "name_event": row[1],
-            "info": row[2],
-            "date": row[3],
-            "time": row[4],
-            "location": row[5],
-            "max_places": row[6],
-            "price": row[7],
-            "category": row[8],
-            "image": row[9],
-            "is_active": row[10],
-            "created_by": row[11]
+            "description_event": row[2],
+            "date_event": row[3],
+            "time_event": row[4],
+            "location_event": row[5],
+            "seats_event": row[6],
+            "price_event": row[7],
+            "event_category": row[8],
+            "images_events": row[9],
+            "organizers_event": row[10],
+            "program_event": row[11],
+            "fullDescription_event": row[12],
+            "is_active": row[13],
+            "created_by": row[14]
         })
     else:
         return jsonify({'message': 'error', 'context': 'missing fields'})
@@ -57,12 +60,27 @@ def get_event():
 @login_required
 def add_event():
     data = request.get_json()
-    to_check = [('name', str), ('date', str), ('number-of-seats', int), ('price', float), ('category', str), ('img', str)]
+    to_check = [
+        ('name_event', str), ('date_event', str), ('seats_event', int),
+        ('price_event', float), ('event_category', str), ('images_events', str)
+    ]
     if validate_greedy(to_check, data):
-        LibraryDB().addEvent(data['name'], None, data['date'], data['time'],
-                             '', data['number-of-seats'], data['price'], data['category'],
-                             data['img'], current_user.user[1])
-        # ------------- заполнить по поступлению
+        LibraryDB().addEvent(
+            data['name_event'],
+            data.get('description_event'),
+            data['date_event'],
+            data['time_event'],
+            data.get('location_event', ''),
+            data['seats_event'],
+            data['price_event'],
+            data['event_category'],
+            data['images_events'],
+            data.get('organizers_event', ''),
+            data.get('program_event', ''),
+            data.get('fullDescription_event', ''),
+            current_user.user[0],
+            True
+        )
         return jsonify({'message': 'success'})
     else:
         return jsonify({'message': 'error', 'context': 'missing fields'})
@@ -72,48 +90,74 @@ def add_event():
 @login_required
 def edit_event():
     data = request.get_json()
-    to_check = [('name', str), ('date', str), ('number-of-seats', int), ('price', float), ('category', str), ('img', str)]
+    to_check = [
+        ('event_id', int), ('name_event', str), ('date_event', str),
+        ('seats_event', int), ('price_event', float),
+        ('event_category', str), ('images_events', str)
+    ]
     if validate_greedy(to_check, data, False):
-        LibraryDB().updateEvent('id......', data['name'], None, data['date'], data['time'],
-                             '', data['number-of-seats'], data['price'], data['category'], data['img'], current_user[1])
-        # ------------- исправить по поступлению
+        LibraryDB().updateEvent(
+            data['event_id'],
+            data['name_event'],
+            data.get('description_event'),
+            data['date_event'],
+            data['time_event'],
+            data.get('location_event'),
+            data['seats_event'],
+            data['price_event'],
+            data['event_category'],
+            data['images_events'],
+            data.get('organizers_event'),
+            data.get('program_event'),
+            data.get('fullDescription_event'),
+            current_user.user[0],
+            data.get('is_active')
+        )
         return jsonify({'message': 'success'})
     else:
         return jsonify({'message': 'error', 'context': 'missing fields'})
 
 
-@api_post.route("/addEvents", methods=["POST"])
+@api_post.route("/addEventsForm", methods=["POST"])
 @login_required
 def add_events():
     LibraryDB().addEvent(
         request.form.get("name_event"),
-        request.form.get("info"),
-        request.form.get("date"),
-        request.form.get("time"),
-        request.form.get("location"),
-        request.form.get("max_places"),
-        request.form.get("price"),
-        request.form.get("category"),
-        request.form.get("image"),
+        request.form.get("description_event"),
+        request.form.get("date_event"),
+        request.form.get("time_event"),
+        request.form.get("location_event"),
+        int(request.form.get("seats_event")),
+        float(request.form.get("price_event")),
+        request.form.get("event_category"),
+        request.form.get("images_events"),
+        request.form.get("organizers_event"),
+        request.form.get("program_event"),
+        request.form.get("fullDescription_event"),
         current_user.user[0],
         True
     )
     return {"message": "success"}
 
-@api_post.route("/editEvents", methods=["POST"])
+
+@api_post.route("/editEventsForm", methods=["POST"])
 @login_required
 def edit_events():
     LibraryDB().updateEvent(
-        request.form.get("event_id"),
+        int(request.form.get("event_id")),
         request.form.get("name_event"),
-        request.form.get("info"),
-        request.form.get("date"),
-        request.form.get("time"),
-        request.form.get("location"),
-        request.form.get("max_places"),
-        request.form.get("price"),
-        request.form.get("category"),
-        request.form.get("image"),
+        request.form.get("description_event"),
+        request.form.get("date_event"),
+        request.form.get("time_event"),
+        request.form.get("location_event"),
+        int(request.form.get("seats_event")),
+        float(request.form.get("price_event")),
+        request.form.get("event_category"),
+        request.form.get("images_events"),
+        request.form.get("organizers_event"),
+        request.form.get("program_event"),
+        request.form.get("fullDescription_event"),
+        current_user.user[0],
         request.form.get("is_active")
     )
     return {"message": "success"}

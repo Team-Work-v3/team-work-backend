@@ -20,14 +20,17 @@ class LibraryDBCreator:
         self.cursor.execute('''CREATE TABLE IF NOT EXISTS events (
                                 event_id INTEGER PRIMARY KEY AUTOINCREMENT,
                                 name_event TEXT NOT NULL,
-                                info TEXT,
-                                date TEXT NOT NULL,
-                                time TEXT NOT NULL,
-                                location TEXT NOT NULL,
-                                max_places INTEGER NOT NULL,
-                                price REAL NOT NULL,
-                                category TEXT,
-                                image TEXT,
+                                description_event TEXT,
+                                date_event TEXT NOT NULL,
+                                time_event TEXT NOT NULL,
+                                location_event TEXT NOT NULL,
+                                seats_event INTEGER NOT NULL,
+                                price_event REAL NOT NULL,
+                                event_category TEXT,
+                                images_events TEXT,
+                                organizers_event TEXT,
+                                program_event TEXT,
+                                fullDescription_event TEXT,
                                 is_active INTEGER NOT NULL DEFAULT 1,
                                 created_by INTEGER NOT NULL,
                                 FOREIGN KEY (created_by) REFERENCES users(user_id))''')
@@ -107,15 +110,23 @@ class LibraryDB:
 
 #events_db
 
-    def addEvent(self, name_event, info, date, time, location, max_places, price, category, image, created_by, is_active=True):
-
+    def addEvent(self, name_event, description_event, date_event, time_event,
+                 location_event, seats_event, price_event, event_category,
+                 images_events, organizers_event, program_event,
+                 fullDescription_event, created_by, is_active=True):
         self.cursor.execute('''
-                INSERT INTO events (
-                    name_event, info, date, time, location,
-                    max_places, price, category, image, is_active, created_by
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-            ''', (name_event, info, date, time, location,
-                  max_places, price, category, image, is_active, created_by))
+                    INSERT INTO events (
+                        name_event, description_event, date_event, time_event,
+                        location_event, seats_event, price_event, event_category,
+                        images_events, organizers_event, program_event,
+                        fullDescription_event, is_active, created_by
+                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                ''', (name_event, description_event, date_event, time_event,
+                      location_event, seats_event, price_event, event_category,
+                      images_events, organizers_event, program_event,
+                      fullDescription_event, is_active, created_by))  ### ИЗМЕНЕНО
+        self.connector.commit()
+        return True
         self.connector.commit()
         return True
 
@@ -135,41 +146,50 @@ class LibraryDB:
         ''').fetchall()
         return rows
 
+    def updateEvent(self, event_id, name_event=None, description_event=None, date_event=None, time_event=None,
+                    location_event=None, seats_event=None, price_event=None, event_category=None,
+                    images_events=None, organizers_event=None, program_event=None,
+                    fullDescription_event=None, created_by=None, is_active=None):
 
-
-    def updateEvent(self, event_id, name_event=None, info=None, date=None, time=None,
-                     location=None, max_places=None, price=None, category=None, image=None,
-                     created_by=None, is_active=None):
         fields = []
         values = []
 
         if name_event is not None:
             fields.append('name_event = ?')
             values.append(name_event)
-        if info is not None:
-            fields.append('info = ?')
-            values.append(info)
-        if date is not None:
-            fields.append('date = ?')
-            values.append(date)
-        if time is not None:
-            fields.append('time = ?')
-            values.append(time)
-        if location is not None:
-            fields.append('location = ?')
-            values.append(location)
-        if max_places is not None:
-            fields.append('max_places = ?')
-            values.append(max_places)
-        if price is not None:
-            fields.append('price = ?')
-            values.append(price)
-        if category is not None:
-            fields.append('category = ?')
-            values.append(category)
-        if image is not None:
-            fields.append('image = ?')
-            values.append(image)
+        if description_event is not None:
+            fields.append('description_event = ?')
+            values.append(description_event)
+        if date_event is not None:
+            fields.append('date_event = ?')
+            values.append(date_event)
+        if time_event is not None:
+            fields.append('time_event = ?')
+            values.append(time_event)
+        if location_event is not None:
+            fields.append('location_event = ?')
+            values.append(location_event)
+        if seats_event is not None:
+            fields.append('seats_event = ?')
+            values.append(seats_event)
+        if price_event is not None:
+            fields.append('price_event = ?')
+            values.append(price_event)
+        if event_category is not None:
+            fields.append('event_category = ?')
+            values.append(event_category)
+        if images_events is not None:
+            fields.append('images_events = ?')
+            values.append(images_events)
+        if organizers_event is not None:
+            fields.append('organizers_event = ?')
+            values.append(organizers_event)
+        if program_event is not None:
+            fields.append('program_event = ?')
+            values.append(program_event)
+        if fullDescription_event is not None:
+            fields.append('fullDescription_event = ?')
+            values.append(fullDescription_event)
         if is_active is not None:
             fields.append('is_active = ?')
             values.append(is_active)
@@ -182,10 +202,7 @@ class LibraryDB:
 
         values.append(event_id)
         update = f"UPDATE events SET {', '.join(fields)} WHERE event_id = ?"
-
-        print(update)
-        print(values)
-        self.cursor.execute(update, (name_event, info, date, time, location, max_places, price,category, image, is_active, created_by, event_id))
+        self.cursor.execute(update, values)
         self.connector.commit()
         return True
 
