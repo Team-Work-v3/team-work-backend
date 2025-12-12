@@ -8,7 +8,7 @@ wheels/
 *.egg-info
 .venv/
 www/
-www
+imgs/
 free
 testing.py
-imgs/
+logs.log

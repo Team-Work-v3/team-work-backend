@@ -1,8 +1,9 @@
-from flask import Flask, render_template, request, redirect, flash
+from flask import Flask, render_template, request, redirect
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
 from werkzeug.routing import Rule
 from flask_login import LoginManager, login_user, login_required, current_user, logout_user
+import logging
 from user_class import User
 from events import LibraryDB
 from api_post import api_post
@@ -12,6 +13,10 @@ from utils import validate_greedy
 www_path = 'www'
 app = Flask(__name__, static_folder=www_path, static_url_path="", template_folder=www_path)
 app.config["SECRET_KEY"] = "o8pjag5ny;o32g42vonny8libtfukjyj,gyukfyfkufyulgyuk"
+werkzeug_logger = logging.getLogger('werkzeug')
+werkzeug_logger.addHandler(logging.FileHandler('logs.log'))
+werkzeug_logger.addHandler(logging.StreamHandler())
+
 login_manager = LoginManager(app)
 login_manager.login_view = 'admin_login'
 
@@ -45,12 +50,10 @@ def admin():
 @login_required
 def admin_add():
     if request.method == "POST":
-        print(1)
         to_check = [('name-event', str), ('description-event', str), ('date-event', str), ('time-event', str),
                     ('location-event', str), ('price-event', float), ('event-category', str), ('seats-event', int),
                     ('organizers-event', str), ('program-event', str), ('fullDescription-event', str)]
         if validate_greedy(to_check, request.form):
-            print(2)
             LibraryDB().addEvent(request.form['name-event'], request.form['description-event'],
                                  request.form['date-event'], request.form['time-event'], request.form['location-event'],
                                  request.form['seats-event'], request.form['price-event'], request.form['event-category'],
@@ -132,12 +135,8 @@ def imgtest():
 
 @app.route("/")
 @app.route("/index")
-def index():
-    return render_template("index/index.html")
-
-
 @app.route("/event/<eid>")
-def event(eid):
+def index(eid=''):
     return render_template("index/index.html")
 
 
