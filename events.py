@@ -124,9 +124,7 @@ class LibraryDB:
                 ''', (name_event, description_event, date_event, time_event,
                       location_event, seats_event, price_event, event_category,
                       images_events, organizers_event, program_event,
-                      fullDescription_event, is_active, created_by))  ### ИЗМЕНЕНО
-        self.connector.commit()
-        return True
+                      fullDescription_event, is_active, created_by))
         self.connector.commit()
         return True
 
