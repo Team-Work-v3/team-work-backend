@@ -207,7 +207,12 @@ class LibraryDB:
         self.connector.commit()
         return True
 
-#registration_db
+    def deleteEvent(self, event_id):
+        self.cursor.execute("DELETE FROM events WHERE event_id = ?", (event_id,))
+        self.connector.commit()
+        return True
+
+    #registration_db
 
     def addRegistration(self, id_event, full_name, email, phone_number, agreement):
         self.cursor.execute('SELECT event_id FROM events WHERE event_id = ?', (id_event,))

@@ -118,6 +118,16 @@ def edit_event():
         return jsonify({'message': 'error', 'context': 'missing fields'})
 
 
+@api_post.route("/deleteEvent", methods=["POST"])
+@login_required
+def delete_event():
+    data = request.get_json()
+    if not data or "event_id" not in data:
+        return jsonify({"message": "error", "context": "missing event_id"})
+    LibraryDB().deleteEvent(data["event_id"])
+    return jsonify({"message": "success"})
+
+
 @api_post.route("/addEventsForm", methods=["POST"])
 @login_required
 def add_events():
