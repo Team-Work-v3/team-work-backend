@@ -141,7 +141,7 @@ def index(eid=''):
 
 @app.route("/admin/change-event/<id>")
 def change_event(id):
-    return render_template("admin/change-events.html")
+    return render_template("admin/change-event.html")
 
 
 @app.route("/<path:filepath>.html")
