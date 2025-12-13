@@ -128,6 +128,7 @@ class LibraryDB:
         self.connector.commit()
         return True
 
+
     def getEvent(self, event_id):
         self.cursor.execute('SELECT * FROM events WHERE event_id = ?', (event_id,))
         result = self.cursor.fetchone()
@@ -138,8 +139,10 @@ class LibraryDB:
 
     def getEvents(self):
         rows = self.cursor.execute('''
-            SELECT event_id, name_event, info, date, time, location,
-                   max_places, price, category, image, is_active, created_by
+            SELECT event_id, name_event, description_event, date_event, time_event,
+                   location_event, seats_event, price_event, event_category,
+                   images_events, organizers_event, program_event,
+                   fullDescription_event, is_active, created_by
             FROM events
         ''').fetchall()
         return rows
