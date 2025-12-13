@@ -74,11 +74,11 @@ def admin_login():
         if validate_greedy(to_check, request.form):
             user_in_db = LibraryDB().getUserByLogin(request.form['login'])
             if not user_in_db:
-                pass
+                return render_template("login.html", errors=True)
                 # flash("Такого пользователя нет")
                 # print("none")
             elif not check_password_hash(user_in_db[2], request.form['password']):
-                pass
+                return render_template("login.html", errors=True)
                 # flash("Неверный пароль")
                 # print(user_in_db[2], request.form['password'])
             else:
@@ -89,7 +89,7 @@ def admin_login():
         else:
             pass
             # flash("Не все поля заполнены")
-    return render_template("login.html")
+    return render_template("login.html", errors=False)
 
 
 @app.route("/admin/logout", methods=['GET'])
