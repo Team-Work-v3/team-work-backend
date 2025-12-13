@@ -139,6 +139,10 @@ def imgtest():
 def index(eid=''):
     return render_template("index/index.html")
 
+@app.route("/admin/change-event/<id>")
+def change_event(id):
+    return render_template("admin/change-events.html")
+
 
 @app.route("/<path:filepath>.html")
 @login_required
