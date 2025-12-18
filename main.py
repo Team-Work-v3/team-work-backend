@@ -33,7 +33,7 @@ for rule in rules_to_remove:
 
 app.register_blueprint(api_get)
 app.register_blueprint(api_post)
-
+app.register_blueprint(temp_points)
 
 @login_manager.user_loader
 def load_user(user_id):
