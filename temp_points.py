@@ -9,5 +9,5 @@ temp_points = Blueprint('temp_points', __name__, url_prefix='/temp')
 def get_Mentors():
     path = "/home/images/mentors"
     files = ["/temp/getMentor/" + f for f in os.listdir(path) if os.path.isfile(f)]
-    jsonify({"links_images": files})
+    return jsonify({"links_images": files})
 
