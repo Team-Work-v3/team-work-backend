@@ -8,6 +8,7 @@ from user_class import User
 from events import LibraryDB
 from api_post import api_post
 from api_get import api_get
+from temp_points import temp_points
 from utils import validate_greedy
 
 www_path = 'www'
