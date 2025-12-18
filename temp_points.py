@@ -13,5 +13,7 @@ def get_Mentors():
 
 @temp_points.route("/temp/getMentor/<filelink>", methods=["GET"])
 def get_Mentor(filelink):
+    print(filelink)
     path = "/home/images/mentors/" + filelink
+    print(path)
     return send_file(path, as_attachment=True)
