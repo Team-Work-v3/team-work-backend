@@ -11,7 +11,7 @@ def get_Mentors():
     files = ["/temp/getMentor/" + f for f in os.listdir(path) if os.path.isfile(path + f)]
     return jsonify({"links_images": files})
 
-@temp_points.route("/temp/getMentor/<filelink>", methods=["GET"])
+@temp_points.route("/getMentor/<filelink>", methods=["GET"])
 def get_Mentor(filelink):
     print(filelink)
     path = "/home/images/mentors/" + filelink
