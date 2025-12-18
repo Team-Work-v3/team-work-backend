@@ -1,4 +1,4 @@
-from flask import Blueprint, jsonify
+from flask import Blueprint, jsonify, send_file
 import os
 
 
@@ -11,3 +11,7 @@ def get_Mentors():
     files = ["/temp/getMentor/" + f for f in os.listdir(path) if os.path.isfile(path + f)]
     return jsonify({"links_images": files})
 
+@temp_points.route("/temp/getMentor/<filelink>", methods=["GET"])
+def get_Mentor(filelink):
+    path = "/home/images/mentors/" + filelink
+    return send_file(path, as_attachment=True)
