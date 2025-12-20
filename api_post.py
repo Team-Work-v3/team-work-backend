@@ -132,25 +132,23 @@ def delete_event():
 @login_required
 def add_events():
     data = request.form.to_dict()
-    print(data)
-    print()
-    """
+
     LibraryDB().addEvent(
-        request.form["name_event"],
-        request.form["description_event"],
-        request.form["date_event"],
-        request.form["time_event"],
-        request.form["location_event"],
-        request.form["seats_event"],
-        request.form["price_event"],
-        request.form["event_category"],
-        request.form["images_events"],
-        request.form["organizers_event"],
-        request.form["program_event"],
-        request.form["fullDescription_event"],
+        data["name_event"],
+        data["description_event"],
+        data["date_event"],
+        data["time_event"],
+        data["location_event"],
+        data["seats_event"],
+        data["price_event"],
+        data["event_category"],
+        data["images_events"],
+        data["organizers_event"],
+        data["program_event"],
+        data["fullDescription_event"],
         current_user.user[0],
         True
-    )"""
+    )
     return {"message": "success"}
 
 
