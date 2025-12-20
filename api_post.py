@@ -131,7 +131,7 @@ def delete_event():
 @api_post.route("/addEventsForm", methods=["POST"])
 @login_required
 def add_events():
-    data = request.form()
+    data = request.form
     print(data)
     print()
     """
