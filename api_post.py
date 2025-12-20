@@ -1,4 +1,4 @@
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, jsonify, request, redirect
 from flask_login import login_required, current_user, login_user
 from werkzeug.security import check_password_hash
 from events import LibraryDB
@@ -125,7 +125,7 @@ def delete_event():
     if not data or "event_id" not in data:
         return jsonify({"message": "error", "context": "missing event_id"})
     LibraryDB().deleteEvent(data["event_id"])
-    return jsonify({"message": "success"})
+    return rende
 
 
 @api_post.route("/addEventsForm", methods=["POST"])
@@ -149,7 +149,7 @@ def add_events():
         current_user.user[0],
         True
     )
-    return {"message": "success"}
+    return redirect("/admin")
 
 
 @api_post.route("/editEventsForm", methods=["POST"])
