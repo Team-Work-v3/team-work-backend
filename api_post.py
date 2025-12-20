@@ -131,8 +131,10 @@ def delete_event():
 @api_post.route("/addEventsForm", methods=["POST"])
 @login_required
 def add_events():
-    print(request.form)
-    print(request.form.keys())
+    data = request.form.get()
+    print(data)
+    print()
+    """
     LibraryDB().addEvent(
         request.form["name_event"],
         request.form["description_event"],
@@ -148,7 +150,7 @@ def add_events():
         request.form["fullDescription_event"],
         current_user.user[0],
         True
-    )
+    )"""
     return {"message": "success"}
 
 
