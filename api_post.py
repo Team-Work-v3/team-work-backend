@@ -142,7 +142,7 @@ def add_events():
         data["seats_event"],
         data["price_event"],
         data["event_category"],
-        data["images_events"],
+        #data["images_events"],
         data["organizers_event"],
         data["program_event"],
         data["fullDescription_event"],
