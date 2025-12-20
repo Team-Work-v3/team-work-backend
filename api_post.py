@@ -30,6 +30,7 @@ def check_admin():
 @api_post.route("/getEvent", methods=["POST"])
 def get_event():
     data = request.get_json()
+    print(data)
     to_check = [('id', int)]
     if validate_greedy(to_check, data, False):
         row = LibraryDB().getEvent(data['id'])
