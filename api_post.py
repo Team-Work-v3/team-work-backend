@@ -132,6 +132,7 @@ def delete_event():
 @login_required
 def add_events():
     print(request.form)
+    print(request.form.keys())
     LibraryDB().addEvent(
         request.form.get("name_event"),
         request.form.get("description_event"),
