@@ -133,7 +133,7 @@ def delete_event():
 def add_events():
     print(request.form)
     LibraryDB().addEvent(
-        request.form.get("name_event"),
+        request.form["name_event"],
         request.form.get("description_event"),
         request.form.get("date_event"),
         request.form.get("time_event"),
