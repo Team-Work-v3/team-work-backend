@@ -60,6 +60,7 @@ def get_event():
 @login_required
 def add_event():
     data = request.get_json()
+    print(data)
     to_check = [
         ('name_event', str), ('date_event', str), ('seats_event', int),
         ('price_event', float), ('event_category', str), ('images_events', str)
