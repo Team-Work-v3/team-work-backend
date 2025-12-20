@@ -60,7 +60,6 @@ def get_event():
 @login_required
 def add_event():
     data = request.get_json()
-    print(data)
     to_check = [
         ('name_event', str), ('date_event', str), ('seats_event', int),
         ('price_event', float), ('event_category', str), ('images_events', str)
@@ -132,6 +131,7 @@ def delete_event():
 @api_post.route("/addEventsForm", methods=["POST"])
 @login_required
 def add_events():
+    print(request.form)
     LibraryDB().addEvent(
         request.form.get("name_event"),
         request.form.get("description_event"),
