@@ -33,7 +33,7 @@ class LibraryDBCreator:
                                 fullDescription_event TEXT,
                                 is_active INTEGER NOT NULL DEFAULT 1,
                                 created_by INTEGER NOT NULL,
-                                FOREIGN KEY (created_by) REFERENCES users(login))''')
+                                FOREIGN KEY (created_by) REFERENCES users(user_id))''')
         self.connector.commit()
 
     def createRegistrationsTable(self):
