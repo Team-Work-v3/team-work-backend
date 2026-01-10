@@ -171,7 +171,7 @@ def add_events():
     return redirect("/admin")
 
 
-@api_post.route("/editEventsForm<id>", methods=["POST"])
+@api_post.route("/editEventsForm/<id>", methods=["POST"])
 @login_required
 def edit_events(id):
     LibraryDB().updateEvent(
