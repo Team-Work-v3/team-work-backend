@@ -268,6 +268,39 @@ class LibraryDB:
         self.connector.commit()
         return True
 
+    def getUsersInEvents(self):
+        events = self.cursor.execute('''
+            SELECT event_id, name_event
+            FROM events
+        ''').fetchall()
+
+        result = []
+        for event in events:
+            event_id, event_name = event
+
+            users = self.cursor.execute('''
+                SELECT full_name, email, phone_number, agreement
+                FROM registration
+                WHERE id_event = ?
+            ''', (event_id,)).fetchall()
+
+            users_list = []
+            for u in users:
+                users_list.append({
+                    "full_name": u[0],
+                    "email": u[1],
+                    "phone_number": u[2],
+                    "agreement": u[3]
+                })
+
+            result.append({
+                "event_id": event_id,
+                "event_name": event_name,
+                "users": users_list
+            })
+
+        return result
+
     def __del__(self):
         self.connector.close()
 
