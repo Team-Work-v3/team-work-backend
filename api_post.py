@@ -134,7 +134,7 @@ def reg_user():
     data = request.get_json()
     to_check = [('id_event', int), ('full_name', str), ('email', str),
         ('phone_number', str), ('agreement', int)]
-    if validate_greedy(to_check, data, False):
+    if validate_greedy(to_check, data, True):
         LibraryDB().addRegistration(
             data['id_event'],
             data['full_name'],

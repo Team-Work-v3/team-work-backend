@@ -45,3 +45,18 @@ def get_shortened_events():
             "is_active": row[13],
         })
     return jsonify({"events": result})
+
+
+@api_get.route("/getUsers", methods=["GET"])
+def get_events():
+    rows = LibraryDB().getRegistrations()
+    result = []
+    for row in rows:
+        result.append({
+            "id_event": row[1],
+            "full_name": row[2],
+            'email': row[3],
+            'phone_number': row[4],
+            'agreement': row[5]
+        })
+    return jsonify({"events": result})
