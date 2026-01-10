@@ -129,6 +129,24 @@ def delete_event():
     return jsonify({"message": "success"})
 
 
+@api_post.route("/regUser", methods=["POST"])
+def reg_user():
+    data = request.get_json()
+    to_check = [('id_event', int), ('full_name', str), ('email', str),
+        ('phone_number', int), ('agreement', int)]
+    if validate_greedy(to_check, data, False):
+        LibraryDB().addRegistration(
+            data['id_event'],
+            data['full_name'],
+            data['email'],
+            data['phone_number'],
+            data['agreement']
+        )
+        return jsonify({'message': 'success'})
+    else:
+        return jsonify({'message': 'error', 'context': 'missing fields'})
+
+
 @api_post.route("/addEventsForm", methods=["POST"])
 @login_required
 def add_events():
