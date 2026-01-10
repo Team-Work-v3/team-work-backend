@@ -33,7 +33,7 @@ class LibraryDBCreator:
                                 fullDescription_event TEXT,
                                 is_active INTEGER NOT NULL DEFAULT 1,
                                 created_by INTEGER NOT NULL,
-                                FOREIGN KEY (created_by) REFERENCES users(user_id))''')
+                                FOREIGN KEY (created_by) REFERENCES users(login))''')
         self.connector.commit()
 
     def createRegistrationsTable(self):
@@ -50,11 +50,7 @@ class LibraryDBCreator:
     def createImageTable(self):
         self.cursor.execute('''CREATE TABLE IF NOT EXISTS images (
                                 id INTEGER PRIMARY KEY AUTOINCREMENT,
-                                id_event INTEGER NOT NULL,
-                                original_name TEXT NOT NULL,
-                                unique_name TEXT NOT NULL UNIQUE,
-                                url TEXT NOT NULL,
-                                FOREIGN KEY (event_id) REFERENCES events(event_id))''')
+                                unique_name TEXT NOT NULL UNIQUE)''')
         self.connector.commit()
 
     def __del__(self):
@@ -216,6 +212,10 @@ class LibraryDB:
         return True
 
     #registration_db
+
+    def getRegistrations(self):
+        rows = self.cursor.execute('SELECT * FROM events').fetchall()
+        return rows
 
     def addRegistration(self, id_event, full_name, email, phone_number, agreement):
         self.cursor.execute('SELECT event_id FROM events WHERE event_id = ?', (id_event,))
