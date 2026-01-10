@@ -191,4 +191,4 @@ def edit_events(id):
         current_user.user[0],
         request.form.get("is_active")
     )
-    return {"message": "success"}
+    return redirect("/admin/events")
