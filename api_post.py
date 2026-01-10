@@ -126,7 +126,7 @@ def delete_event():
     if not data or "event_id" not in data:
         return jsonify({"message": "error", "context": "missing event_id"})
     LibraryDB().deleteEvent(data["event_id"])
-    return rende
+    return jsonify({"message": "success"})
 
 
 @api_post.route("/addEventsForm", methods=["POST"])
