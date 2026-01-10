@@ -133,7 +133,7 @@ def delete_event():
 def reg_user():
     data = request.get_json()
     to_check = [('id_event', int), ('full_name', str), ('email', str),
-        ('phone_number', int), ('agreement', int)]
+        ('phone_number', str), ('agreement', int)]
     if validate_greedy(to_check, data, False):
         LibraryDB().addRegistration(
             data['id_event'],
