@@ -48,7 +48,7 @@ def get_shortened_events():
 
 
 @api_get.route("/getUsers", methods=["GET"])
-def get_events():
+def get_users():
     rows = LibraryDB().getRegistrations()
     result = []
     for row in rows:
