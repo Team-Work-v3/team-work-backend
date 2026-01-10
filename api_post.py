@@ -124,7 +124,7 @@ def edit_event():
 def delete_event():
     data = request.get_json()
     if not data or "event_id" not in data:
-        return jsonify({"message": "error", "context": "missing event_id"})
+        return jsonify({"message": "error"})
     LibraryDB().deleteEvent(data["event_id"])
     return jsonify({"message": "success"})
 
