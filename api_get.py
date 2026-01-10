@@ -60,3 +60,34 @@ def get_events():
             'agreement': row[5]
         })
     return jsonify({"events": result})
+
+@api_get.route("/getUsersInEvents", methods=["GET"])
+def get_users_in_events():
+    events = LibraryDB().getEvents()
+    result = []
+
+    for event in events:
+        event_id = event[0]
+        event_name = event[1]
+
+        users = LibraryDB().cursor.execute(
+            "SELECT full_name, email, phone_number, agreement FROM registration WHERE id_event = ?",
+            (event_id,)
+        ).fetchall()
+
+        users_list = []
+        for u in users:
+            users_list.append({
+                "full_name": u[0],
+                "email": u[1],
+                "phone_number": u[2],
+                "agreement": u[3]
+            })
+
+        result.append({
+            "event_id": event_id,
+            "event_name": event_name,
+            "users": users_list
+        })
+
+    return jsonify({"events": result})
