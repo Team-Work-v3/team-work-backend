@@ -41,7 +41,7 @@ def get_shortened_events():
             "time_event": row[4],
             "price_event": row[7],
             "event_category": row[8],
-            "images_events": row[9],
+            "images_events": "/logoEvents.png",
             "is_active": row[13],
         })
     return jsonify({"events": result})
