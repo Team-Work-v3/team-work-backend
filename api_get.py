@@ -19,7 +19,7 @@ def get_events():
             "seats_event": row[6],
             "price_event": row[7],
             "event_category": row[8],
-            "images_events": row[9],
+            "images_events": "/logoEvents.png",
             "organizers_event": row[10],
             "program_event": row[11],
             "fullDescription_event": row[12],
