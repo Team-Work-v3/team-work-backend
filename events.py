@@ -53,6 +53,17 @@ class LibraryDBCreator:
                                 unique_name TEXT NOT NULL UNIQUE)''')
         self.connector.commit()
 
+    def createReviewsTable(self):
+        self.cursor.execute('''CREATE TABLE IF NOT EXISTS reviews (
+                                review_id INTEGER PRIMARY KEY AUTOINCREMENT,
+                                id_registration INTEGER NOT NULL,
+                                event_id INTEGER NOT NULL,
+                                review_text TEXT NOT NULL,
+                                created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+                                is_approved INTEGER DEFAULT 0,
+                                FOREIGN KEY (id_registration) REFERENCES registration(id_registration),
+                                FOREIGN KEY (event_id) REFERENCES events(event_id))''')
+        self.connector.commit()
     def __del__(self):
         self.connector.close()
 
@@ -304,6 +315,18 @@ class LibraryDB:
             })
 
         return result
+#reviews
+    def addReview(self, id_registration, event_id, review_text, is_approved):
+        self.cursor.execute('''
+            INSERT INTO reviews (id_registration, event_id, review_text, is_approved)
+            VALUES (?, ?, ?, ?)
+        ''', (id_registration, event_id, review_text, is_approved))
+        self.connector.commit()
+        return True
+
+    def getReviews(self):
+        rows = self.cursor.execute('SELECT * FROM events').fetchall()
+        return rows
 
     def __del__(self):
         self.connector.close()

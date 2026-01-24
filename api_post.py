@@ -130,6 +130,21 @@ def delete_event():
     return jsonify({"message": "success"})
 
 
+@api_post.route("/addReview", methods=["POST"])
+def add_review():
+    data = request.get_json()
+    to_check = [('id_registration', int), ('event_id', int), ('review_text', str)]
+
+    if validate_greedy(to_check, data):
+        LibraryDB().addReview(
+            data['id_registration'],
+            data['event_id'],
+            data['review_text'],
+            data['is_approved']
+        )
+        return jsonify({'message': 'success'})
+    else:
+        return jsonify({'message': 'error', 'context': 'missing fields'})
 @api_post.route("/regUser", methods=["POST"])
 def reg_user():
     data = request.get_json()

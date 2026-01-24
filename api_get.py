@@ -28,6 +28,20 @@ def get_events():
         })
     return jsonify({"events": result})
 
+@api_get.route("/getReviews", methods=["GET"])
+def get_reviews():
+    rows = LibraryDB().getReviews()
+    result = []
+    for row in rows:
+        result.append({
+            "review_id": row[0],
+            "id_registration": row[1],
+            "event_id": row[2],
+            "review_text": row[3],
+            "created_at": row[4],
+            "is_approved": bool(row[5])
+        })
+    return jsonify({"reviews": result})
 
 @api_get.route("/getShortenedEvents", methods=["GET"])
 def get_shortened_events():
