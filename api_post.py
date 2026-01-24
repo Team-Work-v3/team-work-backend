@@ -167,7 +167,7 @@ def reg_user():
 @login_required
 def add_events():
     file = request.files['images-events']
-    name='/logoEvents.png'
+    name='logoEvents.png'
     if file:
         name = f'{secrets.token_hex(16)}.{file.filename.split('.')[-1]}'
         while LibraryDB().getImageByName(name):
@@ -185,7 +185,7 @@ def add_events():
 @login_required
 def edit_events(id):
     file = request.files['images-events']
-    name = '/logoEvents.png'
+    name = 'logoEvents.png'
     if file:
         name = f'{secrets.token_hex(16)}.{file.filename.split('.')[-1]}'
         while LibraryDB().getImageByName(name):
