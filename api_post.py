@@ -167,7 +167,7 @@ def reg_user():
 @login_required
 def add_events():
     file = request.files['images-events']
-    name='/logoEvents.png'
+    name='logoEvents.png'
     if file:
         name = f'{secrets.token_hex(16)}.{file.filename.split('.')[-1]}'
         while LibraryDB().getImageByName(name):
@@ -197,3 +197,4 @@ def edit_events(id):
                          f"/images/{name}", request.form['organizers_event'], request.form['program_event'],
                          request.form['fullDescription_event'], 0)
     return redirect("/admin/events")
+

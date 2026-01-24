@@ -64,6 +64,13 @@ class LibraryDBCreator:
                                 FOREIGN KEY (id_registration) REFERENCES registration(id_registration),
                                 FOREIGN KEY (event_id) REFERENCES events(event_id))''')
         self.connector.commit()
+
+    def createCategoryTable(self):
+        self.cursor.execute('''CREATE TABLE IF NOT EXISTS category (
+                                category_id INTEGER PRIMARY KEY AUTOINCREMENT,
+                                category_name TEXT NOT NULL UNIQUE)''')
+        self.connector.commit()
+
     def __del__(self):
         self.connector.close()
 
@@ -325,7 +332,12 @@ class LibraryDB:
         return True
 
     def getReviews(self):
-        rows = self.cursor.execute('SELECT * FROM events').fetchall()
+        rows = self.cursor.execute('SELECT * FROM reviews').fetchall()
+        return rows
+
+#category
+    def getCategories(self):
+        rows = self.cursor.execute('SELECT * FROM category').fetchall()
         return rows
 
     def __del__(self):
@@ -338,5 +350,6 @@ if __name__ == "__main__":
     LibraryDBCreator().createRegistrationsTable()
     LibraryDBCreator().createImageTable()
     LibraryDBCreator().createReviewsTable()
+    LibraryDBCreator().createCategoryTable()
     #LibraryDB().addEvent("test", "info", "2025-12-22", "14:00", "123", 25, 100, "/123/123", "admin", "", 1)
     #LibraryDB().updateEvent(1, "test1234", "", "", "", "123", 25, 100, "/123/123", "admin", "", 1)
