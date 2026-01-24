@@ -43,6 +43,17 @@ def get_reviews():
         })
     return jsonify({"reviews": result})
 
+@api_get.route("/getCategory", methods=["GET"])
+def get_category():
+    rows = LibraryDB().getCategory()
+    result = []
+    for row in rows:
+        result.append({
+            "category_id": row[0],
+            "category_name": row[1],
+        })
+    return jsonify({"category": result})
+
 @api_get.route("/getShortenedEvents", methods=["GET"])
 def get_shortened_events():
     rows = LibraryDB().getEvents()
