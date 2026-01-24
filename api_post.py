@@ -163,12 +163,12 @@ def add_events():
                          request.form['date_event'], request.form['time_event'], request.form['location_event'],
                          request.form['seats_event'], request.form['price_event'], request.form['event_category'],
                          name, request.form['organizers_event'], request.form['program_event'],
-                         request.form['fullDescription_event'], current_user.user[0])
+                         request.form['fullDescription_event'])
     LibraryDB().addEvent(request.form['name_event'], request.form['description_event'],
                          request.form['date_event'], request.form['time_event'], request.form['location_event'],
                          request.form['seats_event'], request.form['price_event'], request.form['event_category'],
                          name, request.form['organizers_event'], request.form['program_event'],
-                         request.form['fullDescription_event'], current_user.user[0])
+                         request.form['fullDescription_event'], 0)
     return redirect("/admin")
 
 
