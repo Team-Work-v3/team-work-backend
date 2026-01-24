@@ -66,7 +66,7 @@ class LibraryDBCreator:
         self.connector.commit()
 
     def createCategoryTable(self):
-        self.cursor.execute('''CREATE TABLE IF NOT EXISTS reviews (
+        self.cursor.execute('''CREATE TABLE IF NOT EXISTS category (
                                 category_id INTEGER PRIMARY KEY AUTOINCREMENT,
                                 category_name TEXT NOT NULL)''')
 
