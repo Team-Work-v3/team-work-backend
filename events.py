@@ -331,7 +331,7 @@ class LibraryDB:
         return True
 
     def getReviews(self):
-        rows = self.cursor.execute('SELECT * FROM events').fetchall()
+        rows = self.cursor.execute('SELECT * FROM reviews').fetchall()
         return rows
 
 #category
