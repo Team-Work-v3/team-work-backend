@@ -151,23 +151,17 @@ def reg_user():
 @api_post.route("/addEventsForm", methods=["POST"])
 @login_required
 def add_events():
-    print(request.form)
     file = request.files['images-events']
-    name=''
+    name='/logoEvents.png'
     if file:
         name = f'{secrets.token_hex(16)}.{file.filename.split('.')[-1]}'
         while LibraryDB().getImageByName(name):
             name = f'{secrets.token_hex(16)}.{file.filename.split('.')[-1]}'
         file.save(f'/home/images/{name}')
-    print(request.form['name_event'], request.form['description_event'],
-                         request.form['date_event'], request.form['time_event'], request.form['location_event'],
-                         request.form['seats_event'], request.form['price_event'], request.form['event_category'],
-                         name, request.form['organizers_event'], request.form['program_event'],
-                         request.form['fullDescription_event'])
     LibraryDB().addEvent(request.form['name_event'], request.form['description_event'],
                          request.form['date_event'], request.form['time_event'], request.form['location_event'],
                          request.form['seats_event'], request.form['price_event'], request.form['event_category'],
-                         name, request.form['organizers_event'], request.form['program_event'],
+                         f"/images/{name}", request.form['organizers_event'], request.form['program_event'],
                          request.form['fullDescription_event'], 0)
     return redirect("/admin")
 
@@ -175,21 +169,16 @@ def add_events():
 @api_post.route("/editEventsForm/<id>", methods=["POST"])
 @login_required
 def edit_events(id):
-    LibraryDB().updateEvent(
-        int(id),
-        request.form.get("name_event"),
-        request.form.get("description_event"),
-        request.form.get("date_event"),
-        request.form.get("time_event"),
-        request.form.get("location_event"),
-        int(request.form.get("seats_event")),
-        float(request.form.get("price_event")),
-        request.form.get("event_category"),
-        request.form.get("images_events"),
-        request.form.get("organizers_event"),
-        request.form.get("program_event"),
-        request.form.get("fullDescription_event"),
-        current_user.user[0],
-        request.form.get("is_active")
-    )
+    file = request.files['images-events']
+    name = '/logoEvents.png'
+    if file:
+        name = f'{secrets.token_hex(16)}.{file.filename.split('.')[-1]}'
+        while LibraryDB().getImageByName(name):
+            name = f'{secrets.token_hex(16)}.{file.filename.split('.')[-1]}'
+        file.save(f'/home/images/{name}')
+    LibraryDB().updateEvent(int(id), request.form['name_event'], request.form['description_event'],
+                         request.form['date_event'], request.form['time_event'], request.form['location_event'],
+                         request.form['seats_event'], request.form['price_event'], request.form['event_category'],
+                         f"/images/{name}", request.form['organizers_event'], request.form['program_event'],
+                         request.form['fullDescription_event'], 0)
     return redirect("/admin/events")
