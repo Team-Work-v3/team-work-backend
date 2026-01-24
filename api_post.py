@@ -151,6 +151,7 @@ def reg_user():
 @api_post.route("/addEventsForm", methods=["POST"])
 @login_required
 def add_events():
+    print(request.form)
     file = request.files['images-events']
     name=''
     if file:
