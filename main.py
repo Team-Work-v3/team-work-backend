@@ -63,7 +63,7 @@ def admin_add():
                     name = f'{secrets.token_hex(16)}.{file.filename.split('.')[1]}'
                 LibraryDB().addImage(name)
                 image_id = LibraryDB().getImageByName(name)
-                file.save(f'home/images/{name}')
+                file.save(f'/home/images/{name}')
             LibraryDB().addEvent(request.form['name-event'], request.form['description-event'],
                                  request.form['date-event'], request.form['time-event'], request.form['location-event'],
                                  request.form['seats-event'], request.form['price-event'], request.form['event-category'],

@@ -157,7 +157,7 @@ def add_events():
         name = f'{secrets.token_hex(16)}.{file.filename.split('.')[-1]}'
         while LibraryDB().getImageByName(name):
             name = f'{secrets.token_hex(16)}.{file.filename.split('.')[-1]}'
-        file.save(f'home/images/{name}')
+        file.save(f'/home/images/{name}')
     LibraryDB().addEvent(request.form['name_event'], request.form['description_event'],
                          request.form['date_event'], request.form['time_event'], request.form['location_event'],
                          request.form['seats_event'], request.form['price_event'], request.form['event_category'],
