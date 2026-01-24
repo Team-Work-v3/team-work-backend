@@ -48,6 +48,7 @@ def get_shortened_events():
 
 
 @api_get.route("/getUsers", methods=["GET"])
+@login_required
 def get_users():
     rows = LibraryDB().getRegistrations()
     result = []
@@ -62,6 +63,7 @@ def get_users():
     return jsonify({"events": result})
 
 @api_get.route("/getUsersInEvents", methods=["GET"])
+@login_required
 def get_users_in_events():
     result = LibraryDB().getUsersInEvents()
     return jsonify({"events": result})

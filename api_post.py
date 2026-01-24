@@ -1,6 +1,7 @@
 from flask import Blueprint, jsonify, request, redirect
 from flask_login import login_required, current_user, login_user
 from werkzeug.security import check_password_hash
+import secrets
 from events import LibraryDB
 from user_class import User
 from utils import validate_greedy
@@ -150,24 +151,18 @@ def reg_user():
 @api_post.route("/addEventsForm", methods=["POST"])
 @login_required
 def add_events():
-    data = request.form.to_dict()
-
-    LibraryDB().addEvent(
-        data["name_event"],
-        data["description_event"],
-        data["date_event"],
-        data["time_event"],
-        data["location_event"],
-        data["seats_event"],
-        data["price_event"],
-        data["event_category"],
-        #data["images_events"],
-        data["organizers_event"],
-        data["program_event"],
-        data["fullDescription_event"],
-        current_user.user[0],
-        True
-    )
+    file = request.files['images-events']
+    name=''
+    if file:
+        name = f'{secrets.token_hex(16)}.{file.filename.split('.')[-1]}'
+        while LibraryDB().getImageByName(name):
+            name = f'{secrets.token_hex(16)}.{file.filename.split('.')[-1]}'
+        file.save(f'home/images/{name}')
+    LibraryDB().addEvent(request.form['name_event'], request.form['description_event'],
+                         request.form['date_event'], request.form['time_event'], request.form['location_event'],
+                         request.form['seats_event'], request.form['price_event'], request.form['event_category'],
+                         name, request.form['organizers_event'], request.form['program_event'],
+                         request.form['fullDescription_event'], current_user.user[0])
     return redirect("/admin")
 
 

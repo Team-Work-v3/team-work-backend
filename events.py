@@ -211,7 +211,14 @@ class LibraryDB:
         self.connector.commit()
         return True
 
-    #registration_db
+    def getImageByName(self, name):
+        self.cursor.execute('SELECT * FROM events WHERE images_events = ?', (name,))
+        result = self.cursor.fetchone()
+        if result:
+            return result[0]
+        return False
+
+#registration_db
 
     def getRegistrations(self):
         rows = self.cursor.execute('SELECT * FROM events').fetchall()
@@ -309,5 +316,6 @@ if __name__ == "__main__":
     LibraryDBCreator().createUsersTable()
     LibraryDBCreator().createEventsTable()
     LibraryDBCreator().createRegistrationsTable()
+    LibraryDBCreator().createImageTable()
     #LibraryDB().addEvent("test", "info", "2025-12-22", "14:00", "123", 25, 100, "/123/123", "admin", "", 1)
     #LibraryDB().updateEvent(1, "test1234", "", "", "", "123", 25, 100, "/123/123", "admin", "", 1)

@@ -1,9 +1,9 @@
-from flask import Flask, render_template, request, redirect
+from flask import Flask, render_template, request, redirect, send_file
 from werkzeug.security import generate_password_hash, check_password_hash
-from werkzeug.utils import secure_filename
 from werkzeug.routing import Rule
 from flask_login import LoginManager, login_user, login_required, current_user, logout_user
 import logging
+import secrets
 from user_class import User
 from events import LibraryDB
 from api_post import api_post
@@ -55,11 +55,20 @@ def admin_add():
                     ('location-event', str), ('price-event', float), ('event-category', str), ('seats-event', int),
                     ('organizers-event', str), ('program-event', str), ('fullDescription-event', str)]
         if validate_greedy(to_check, request.form):
+            file = request.files['images-events']
+            image_id = ''
+            if file:
+                name = f'{secrets.token_hex(16)}.{file.filename.split('.')[1]}'
+                while LibraryDB().getImageByName(name):
+                    name = f'{secrets.token_hex(16)}.{file.filename.split('.')[1]}'
+                LibraryDB().addImage(name)
+                image_id = LibraryDB().getImageByName(name)
+                file.save(f'home/images/{name}')
             LibraryDB().addEvent(request.form['name-event'], request.form['description-event'],
                                  request.form['date-event'], request.form['time-event'], request.form['location-event'],
                                  request.form['seats-event'], request.form['price-event'], request.form['event-category'],
-                                 '', current_user.user[1])
-            #------------- заполнить по поступлению
+                                 image_id, request.form['organizers-event'], request.form['program-event'],
+                                 request.form['fullDescription-event'], current_user.user[0])
         else:
             pass
             # flash("Не все поля заполнены")
@@ -123,17 +132,6 @@ def admin_members():
 def admin_other():
     return render_template("admin/other.html")
 
-
-@app.route("/admin/test", methods=['GET', 'POST'])
-@login_required
-def imgtest():
-    if request.method == "POST":
-        file = request.files['images-events']
-        file.save(f'imgs/{secure_filename(file.filename)}')
-
-    return render_template("imgtest.html")
-
-
 @app.route("/")
 @app.route("/index")
 @app.route("/event/<eid>")
@@ -144,6 +142,9 @@ def index(eid=''):
 def change_event(id):
     return render_template("admin/change-event.html", event_id=id)
 
+@app.route("/images/<name>")
+def prev_photo(name):
+    return send_file(f"home/images/{name}")
 
 @app.route("/<path:filepath>.html")
 @login_required
