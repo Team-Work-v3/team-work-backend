@@ -144,7 +144,7 @@ def change_event(id):
 
 @app.route("/images/<name>")
 def prev_photo(name):
-    return send_file(f"home/images/{name}")
+    return send_file(f"/home/images/{name}")
 
 @app.route("/<path:filepath>.html")
 @login_required
