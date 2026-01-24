@@ -19,7 +19,7 @@ def get_events():
             "seats_event": row[6],
             "price_event": row[7],
             "event_category": row[8],
-            "images_events": "/logoEvents.png",
+            "images_events": row[9],
             "organizers_event": row[10],
             "program_event": row[11],
             "fullDescription_event": row[12],
@@ -41,7 +41,7 @@ def get_shortened_events():
             "time_event": row[4],
             "price_event": row[7],
             "event_category": row[8],
-            "images_events": "/logoEvents.png",
+            "images_events": row[9],
             "is_active": row[13],
         })
     return jsonify({"events": result})
