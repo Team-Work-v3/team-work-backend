@@ -144,7 +144,7 @@ def add_review():
         )
         return jsonify({'message': 'success'})
     else:
-        return jsonify({'message': 'error', 'context': 'missing fields'})
+        return jsonify({'message': 'error'})
 @api_post.route("/regUser", methods=["POST"])
 def reg_user():
     data = request.get_json()

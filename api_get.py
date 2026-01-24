@@ -28,7 +28,7 @@ def get_events():
         })
     return jsonify({"events": result})
 
-@api_get.route("/getReviews", methods=["GET"])
+@api_get.route("/getAllReviews", methods=["GET"])
 def get_reviews():
     rows = LibraryDB().getReviews()
     result = []

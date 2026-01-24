@@ -337,5 +337,6 @@ if __name__ == "__main__":
     LibraryDBCreator().createEventsTable()
     LibraryDBCreator().createRegistrationsTable()
     LibraryDBCreator().createImageTable()
+    LibraryDBCreator().createReviewsTable()
     #LibraryDB().addEvent("test", "info", "2025-12-22", "14:00", "123", 25, 100, "/123/123", "admin", "", 1)
     #LibraryDB().updateEvent(1, "test1234", "", "", "", "123", 25, 100, "/123/123", "admin", "", 1)
