@@ -44,6 +44,7 @@ class LibraryDBCreator:
                                 email TEXT NOT NULL,
                                 phone_number TEXT,
                                 agreement INTEGER,
+                                ticket_amount INTEGER DEFAULT 1,
                                 FOREIGN KEY (id_event) REFERENCES events(event_id))''')
         self.connector.commit()
 
@@ -238,7 +239,7 @@ class LibraryDB:
         rows = self.cursor.execute('SELECT * FROM events').fetchall()
         return rows
 
-    def addRegistration(self, id_event, full_name, email, phone_number, agreement):
+    def addRegistration(self, id_event, full_name, email, phone_number, agreement, ticket_amount):
         self.cursor.execute('SELECT event_id FROM events WHERE event_id = ?', (id_event,))
         result = self.cursor.fetchone()
         if not result or not result[0]:
@@ -246,9 +247,9 @@ class LibraryDB:
 
         self.cursor.execute('''
             INSERT INTO registration (
-                id_event, full_name, email, phone_number, agreement
+                id_event, full_name, email, phone_number, agreement, ticket_amount
             ) VALUES (?, ?, ?, ?, ?)
-        ''', (id_event, full_name, email, phone_number, agreement))
+        ''', (id_event, full_name, email, phone_number, agreement, ticket_amount))
         self.connector.commit()
         return True
 
@@ -263,7 +264,7 @@ class LibraryDB:
         return True
 
     def updateRegistration(self, id_registration, full_name=None, email=None,
-                           phone_number=None, agreement=None):
+                           phone_number=None, agreement=None, ticket_amount=None):
         fields = []
         values = []
 
@@ -279,6 +280,9 @@ class LibraryDB:
         if agreement is not None:
             fields.append('agreement = ?')
             values.append(agreement)
+        if ticket_amount is not None:
+            fields.append('ticket_amount = ?')
+            values.append(ticket_amount)
 
         if not fields:
             return False
@@ -300,7 +304,7 @@ class LibraryDB:
             event_id, event_name = event
 
             users = self.cursor.execute('''
-                SELECT full_name, email, phone_number, agreement
+                SELECT full_name, email, phone_number, agreement, ticket_amount
                 FROM registration
                 WHERE id_event = ?
             ''', (event_id,)).fetchall()
@@ -311,7 +315,8 @@ class LibraryDB:
                     "full_name": u[0],
                     "email": u[1],
                     "phone_number": u[2],
-                    "agreement": u[3]
+                    "agreement": u[3],
+                    "ticket_amount": u[4]
                 })
 
             result.append({
