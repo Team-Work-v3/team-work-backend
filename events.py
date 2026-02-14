@@ -344,7 +344,24 @@ class LibraryDB:
         rows = self.cursor.execute('SELECT * FROM reviews').fetchall()
         return rows
 
-#category
+    def deleteReview(self, review_id):
+        self.cursor.execute(
+            'SELECT review_id FROM reviews WHERE review_id = ?',
+            (review_id,)
+        )
+        result = self.cursor.fetchone()
+
+        if not result or not result[0]:
+            return False
+
+        self.cursor.execute(
+            'DELETE FROM reviews WHERE review_id = ?',
+            (review_id,)
+        )
+        self.connector.commit()
+        return True
+
+    #category
 
     def getCategory(self):
         rows = self.cursor.execute('SELECT * FROM category').fetchall()

@@ -247,3 +247,18 @@ def edit_registration():
             return jsonify({'message': 'error', 'context': 'not found'})
     else:
         return jsonify({'message': 'error', 'context': 'missing fields'})
+
+@api_post.route("/deleteReview", methods=["POST"])
+@login_required
+def delete_review():
+    data = request.get_json()
+
+    if not data or "review_id" not in data:
+        return jsonify({"message": "error"})
+
+    result = LibraryDB().deleteReview(data["review_id"])
+
+    if result:
+        return jsonify({"message": "success"})
+    else:
+        return jsonify({"message": "error"})
