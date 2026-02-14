@@ -60,18 +60,45 @@ def get_category():
 def get_shortened_events():
     rows = LibraryDB().getEvents()
     result = []
-    print(request.args.to_dict())
-    for row in rows:
-        result.append({
-            "event_id": row[0],
-            "name_event": row[1],
-            "date_event": row[3],
-            "time_event": row[4],
-            "price_event": row[7],
-            "event_category": row[8],
-            "images_events": row[9],
-            "is_active": row[13],
-        })
+    if 'state' in request.args.keys():
+        if request.args['state'] == 'back':
+            for row in rows:
+                if datetime.datetime.strptime(row[3] + row[4], '%Y-%m-%d%H:%M') <= datetime.datetime.now():
+                    result.append({
+                        "event_id": row[0],
+                        "name_event": row[1],
+                        "date_event": row[3],
+                        "time_event": row[4],
+                        "price_event": row[7],
+                        "event_category": row[8],
+                        "images_events": row[9],
+                        "is_active": row[13],
+                    })
+        elif request.args['state'] == 'next':
+            for row in rows:
+                if datetime.datetime.strptime(row[3] + row[4], '%Y-%m-%d%H:%M') > datetime.datetime.now():
+                    result.append({
+                        "event_id": row[0],
+                        "name_event": row[1],
+                        "date_event": row[3],
+                        "time_event": row[4],
+                        "price_event": row[7],
+                        "event_category": row[8],
+                        "images_events": row[9],
+                        "is_active": row[13],
+                    })
+    else:
+        for row in rows:
+            result.append({
+                "event_id": row[0],
+                "name_event": row[1],
+                "date_event": row[3],
+                "time_event": row[4],
+                "price_event": row[7],
+                "event_category": row[8],
+                "images_events": row[9],
+                "is_active": row[13],
+            })
     return jsonify({"events": result})
 
 
