@@ -149,14 +149,15 @@ def add_review():
 def reg_user():
     data = request.get_json()
     to_check = [('id_event', int), ('full_name', str), ('email', str),
-        ('phone_number', str), ('agreement', int)]
+        ('phone_number', str), ('agreement', int), ('ticket_amount', int)]
     if validate_greedy(to_check, data, True):
         LibraryDB().addRegistration(
             data['id_event'],
             data['full_name'],
             data['email'],
             data['phone_number'],
-            data['agreement']
+            data['agreement'],
+            data['ticket_amount']
         )
         return jsonify({'message': 'success'})
     else:
