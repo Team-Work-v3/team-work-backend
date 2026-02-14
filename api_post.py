@@ -149,7 +149,7 @@ def add_review():
 def reg_user():
     data = request.get_json()
     to_check = [('id_event', int), ('full_name', str), ('email', str),
-        ('phone_number', str), ('agreement', int), ('ticket_amount', int)]
+        ('phone_number', str), ('agreement', int), ('ticket_amount', int), ('confirmation', int)]
     if validate_greedy(to_check, data, True):
         LibraryDB().addRegistration(
             data['id_event'],
@@ -157,7 +157,8 @@ def reg_user():
             data['email'],
             data['phone_number'],
             data['agreement'],
-            data['ticket_amount']
+            data['ticket_amount'],
+            data['confirmation']
         )
         return jsonify({'message': 'success'})
     else:
@@ -213,3 +214,36 @@ def edit_events(id):
                          f"/images/{name}", request.form['organizers_event'], request.form['program_event'],
                          request.form['fullDescription_event'], 0)
     return redirect("/admin/events")
+
+@api_post.route("/editRegistration", methods=["POST"])
+@login_required
+def edit_registration():
+    data = request.get_json()
+
+    to_check = [
+        ('id_registration', int),
+        ('full_name', str),
+        ('email', str),
+        ('phone_number', str),
+        ('agreement', int),
+        ('ticket_amount', int),
+        ('confirmation', int)
+    ]
+
+    if validate_greedy(to_check, data, False):
+        result = LibraryDB().updateRegistration(
+            data['id_registration'],
+            data['full_name'],
+            data['email'],
+            data['phone_number'],
+            data['agreement'],
+            data['ticket_amount'],
+            data['confirmation']
+        )
+
+        if result:
+            return jsonify({'message': 'success'})
+        else:
+            return jsonify({'message': 'error', 'context': 'not found'})
+    else:
+        return jsonify({'message': 'error', 'context': 'missing fields'})

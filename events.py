@@ -240,7 +240,7 @@ class LibraryDB:
         rows = self.cursor.execute('SELECT * FROM events').fetchall()
         return rows
 
-    def addRegistration(self, id_event, full_name, email, phone_number, agreement, ticket_amount):
+    def addRegistration(self, id_event, full_name, email, phone_number, agreement, ticket_amount, confirmation):
         self.cursor.execute('SELECT event_id FROM events WHERE event_id = ?', (id_event,))
         result = self.cursor.fetchone()
         if not result or not result[0]:
@@ -248,19 +248,9 @@ class LibraryDB:
 
         self.cursor.execute('''
             INSERT INTO registration (
-                id_event, full_name, email, phone_number, agreement, ticket_amount
+                id_event, full_name, email, phone_number, agreement, ticket_amount, confirmation
             ) VALUES (?, ?, ?, ?, ?)
-        ''', (id_event, full_name, email, phone_number, agreement, ticket_amount))
-        self.connector.commit()
-        return True
-
-    def deleteRegistration(self, id_registration):
-        self.cursor.execute('SELECT id_registration FROM registration WHERE id_registration = ?', (id_registration,))
-        result = self.cursor.fetchone()
-        if not result or not result[0]:
-            return False
-
-        self.cursor.execute('DELETE FROM registration WHERE id_registration = ?', (id_registration,))
+        ''', (id_event, full_name, email, phone_number, agreement, ticket_amount, confirmation))
         self.connector.commit()
         return True
 
@@ -275,7 +265,7 @@ class LibraryDB:
         return True
 
     def updateRegistration(self, id_registration, full_name=None, email=None,
-                           phone_number=None, agreement=None, ticket_amount=None):
+                           phone_number=None, agreement=None, ticket_amount=None, confirmation=None):
         fields = []
         values = []
 
@@ -294,6 +284,9 @@ class LibraryDB:
         if ticket_amount is not None:
             fields.append('ticket_amount = ?')
             values.append(ticket_amount)
+        if confirmation is not None:
+            fields.append('confirmation = ?')
+            values.append(confirmation)
 
         if not fields:
             return False
@@ -315,7 +308,7 @@ class LibraryDB:
             event_id, event_name = event
 
             users = self.cursor.execute('''
-                SELECT full_name, email, phone_number, agreement, ticket_amount
+                SELECT full_name, email, phone_number, agreement, ticket_amount, confirmation
                 FROM registration
                 WHERE id_event = ?
             ''', (event_id,)).fetchall()
@@ -327,7 +320,8 @@ class LibraryDB:
                     "email": u[1],
                     "phone_number": u[2],
                     "agreement": u[3],
-                    "ticket_amount": u[4]
+                    "ticket_amount": u[4],
+                    "confirmation": u[5]
                 })
 
             result.append({
