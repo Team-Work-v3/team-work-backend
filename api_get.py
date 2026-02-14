@@ -1,6 +1,7 @@
-from flask import Blueprint, jsonify
+from flask import Blueprint, jsonify, request
 from flask_login import login_required
 from events import LibraryDB
+import datetime
 
 api_get = Blueprint('api_get', __name__, url_prefix='/api')
 
@@ -59,6 +60,7 @@ def get_category():
 def get_shortened_events():
     rows = LibraryDB().getEvents()
     result = []
+    print(request.args.to_dict())
     for row in rows:
         result.append({
             "event_id": row[0],
