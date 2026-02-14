@@ -181,6 +181,21 @@ def add_events():
                          request.form['fullDescription_event'], 0)
     return redirect("/admin")
 
+@api_post.route("/deleteRegistration", methods=["POST"])
+@login_required
+def delete_registration():
+    data = request.get_json()
+
+    if not data or "id_registration" not in data:
+        return jsonify({"message": "error", "context": "missing fields"})
+
+    result = LibraryDB().deleteRegistration(data["id_registration"])
+
+    if result:
+        return jsonify({"message": "success"})
+    else:
+        return jsonify({"message": "error"})
+
 
 @api_post.route("/editEventsForm/<id>", methods=["POST"])
 @login_required

@@ -45,6 +45,7 @@ class LibraryDBCreator:
                                 phone_number TEXT,
                                 agreement INTEGER,
                                 ticket_amount INTEGER DEFAULT 1,
+                                confirmation INTEGER DEFAULT 0,
                                 FOREIGN KEY (id_event) REFERENCES events(event_id))''')
         self.connector.commit()
 
@@ -250,6 +251,16 @@ class LibraryDB:
                 id_event, full_name, email, phone_number, agreement, ticket_amount
             ) VALUES (?, ?, ?, ?, ?)
         ''', (id_event, full_name, email, phone_number, agreement, ticket_amount))
+        self.connector.commit()
+        return True
+
+    def deleteRegistration(self, id_registration):
+        self.cursor.execute('SELECT id_registration FROM registration WHERE id_registration = ?', (id_registration,))
+        result = self.cursor.fetchone()
+        if not result or not result[0]:
+            return False
+
+        self.cursor.execute('DELETE FROM registration WHERE id_registration = ?', (id_registration,))
         self.connector.commit()
         return True
 
