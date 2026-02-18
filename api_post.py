@@ -148,8 +148,10 @@ def add_review():
 @api_post.route("/regUser", methods=["POST"])
 def reg_user():
     data = request.get_json()
+    print(data)
     to_check = [('id_event', int), ('full_name', str), ('email', str),
         ('phone_number', str), ('agreement', int), ('ticket_amount', int), ('confirmation', int)]
+    print(to_check)
     if validate_greedy(to_check, data, True):
         LibraryDB().addRegistration(
             data['id_event'],
