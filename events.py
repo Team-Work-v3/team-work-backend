@@ -249,7 +249,7 @@ class LibraryDB:
         self.cursor.execute('''
             INSERT INTO registration (
                 id_event, full_name, email, phone_number, agreement, ticket_amount, confirmation
-            ) VALUES (?, ?, ?, ?, ?, ?)
+            ) VALUES (?, ?, ?, ?, ?, ?, ?)
         ''', (id_event, full_name, email, phone_number, agreement, ticket_amount, confirmation))
         self.connector.commit()
         return True
