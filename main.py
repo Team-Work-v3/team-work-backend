@@ -1,6 +1,5 @@
 from flask import Flask, render_template, request, redirect, send_file
 from werkzeug.security import generate_password_hash, check_password_hash
-from werkzeug.routing import Rule
 from flask_login import LoginManager, login_user, login_required, current_user, logout_user
 import logging
 import secrets
@@ -45,36 +44,6 @@ def load_user(user_id):
 @login_required
 def admin():
     return render_template("admin/events.html")
-
-
-@app.route("/admin/add", methods=['GET', 'POST'])
-@login_required
-def admin_add():
-    if request.method == "POST":
-        to_check = [('name-event', str), ('description-event', str), ('date-event', str), ('time-event', str),
-                    ('location-event', str), ('price-event', float), ('event-category', str), ('seats-event', int),
-                    ('organizers-event', str), ('program-event', str), ('fullDescription-event', str)]
-        if validate_greedy(to_check, request.form):
-            file = request.files['images-events']
-            image_id = ''
-            if file:
-                name = f'{secrets.token_hex(16)}.{file.filename.split('.')[1]}'
-                while LibraryDB().getImageByName(name):
-                    name = f'{secrets.token_hex(16)}.{file.filename.split('.')[1]}'
-                LibraryDB().addImage(name)
-                image_id = LibraryDB().getImageByName(name)
-                file.save(f'/home/images/{name}')
-            LibraryDB().addEvent(request.form['name-event'], request.form['description-event'],
-                                 request.form['date-event'], request.form['time-event'], request.form['location-event'],
-                                 request.form['seats-event'], request.form['price-event'], request.form['event-category'],
-                                 image_id, request.form['organizers-event'], request.form['program-event'],
-                                 request.form['fullDescription-event'], current_user.user[0])
-        else:
-            pass
-            # flash("Не все поля заполнены")
-        return redirect("/admin/events")
-    return render_template("admin/add.html")
-
 
 
 @app.route("/admin/login", methods=['GET', 'POST'])
