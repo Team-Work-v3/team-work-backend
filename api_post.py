@@ -45,14 +45,15 @@ def get_event():
             "time_event": row[4],
             "location_event": row[5],
             "seats_event": row[6],
-            "price_event": row[7],
-            "event_category": row[8],
-            "images_events": row[9],
-            "organizers_event": row[10],
-            "program_event": row[11],
-            "fullDescription_event": row[12],
-            "is_active": row[13],
-            "created_by": row[14]
+            "remaining_seats": row[7],
+            "price_event": row[8],
+            "event_category": row[9],
+            "images_events": row[10],
+            "organizers_event": row[11],
+            "program_event": row[12],
+            "fullDescription_event": row[13],
+            "is_active": row[14],
+            "created_by": row[15]
         })
     else:
         return jsonify({'message': 'error', 'context': 'missing fields'})
