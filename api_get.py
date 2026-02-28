@@ -70,10 +70,11 @@ def get_shortened_events():
                         "name_event": row[1],
                         "date_event": row[3],
                         "time_event": row[4],
-                        "price_event": row[7],
-                        "event_category": row[8],
-                        "images_events": row[9],
-                        "is_active": row[13],
+                        "remaining_seats": row[7],
+                        "price_event": row[8],
+                        "event_category": row[9],
+                        "images_events": row[10],
+                        "is_active": row[14],
                     })
         elif request.args['state'] == 'next':
             for row in rows:
@@ -83,10 +84,11 @@ def get_shortened_events():
                         "name_event": row[1],
                         "date_event": row[3],
                         "time_event": row[4],
-                        "price_event": row[7],
-                        "event_category": row[8],
-                        "images_events": row[9],
-                        "is_active": row[13],
+                        "remaining_seats": row[7],
+                        "price_event": row[8],
+                        "event_category": row[9],
+                        "images_events": row[10],
+                        "is_active": row[14],
                     })
     else:
         for row in rows:
@@ -95,12 +97,14 @@ def get_shortened_events():
                 "name_event": row[1],
                 "date_event": row[3],
                 "time_event": row[4],
-                "price_event": row[7],
-                "event_category": row[8],
-                "images_events": row[9],
-                "is_active": row[13],
+                "remaining_seats": row[7],
+                "price_event": row[8],
+                "event_category": row[9],
+                "images_events": row[10],
+                "is_active": row[14],
             })
     return jsonify({"events": result})
+
 
 
 @api_get.route("/getUsers", methods=["GET"])
