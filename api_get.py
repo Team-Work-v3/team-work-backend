@@ -105,6 +105,16 @@ def get_shortened_events():
             })
     return jsonify({"events": result})
 
+@api_get.route("/getCategoryNew", methods=["GET"])
+@login_required
+def get_category_new():
+    rows = LibraryDB().getCategory()
+    result = {}
+
+    for row in rows:
+        result[row[0]] = row[1]
+
+    return jsonify(result)
 
 
 @api_get.route("/getUsers", methods=["GET"])
