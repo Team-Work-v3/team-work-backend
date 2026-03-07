@@ -125,6 +125,12 @@ class LibraryDB:
 
 #events_db
 
+    def calcRemainingSeats(self, event_id, seats_event):
+        self.cursor.execute('SELECT COUNT(*) FROM registration WHERE id_event = ?', (event_id,))
+        taken = self.cursor.fetchone()[0]
+
+        return seats_event - taken
+
     def addEvent(self, name_event, description_event, date_event, time_event,
                  location_event, seats_event, price_event, event_category,
                  images_events, organizers_event, program_event,

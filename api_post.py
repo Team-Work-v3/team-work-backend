@@ -18,6 +18,9 @@ def get_event():
         row = LibraryDB().getEvent(event_data.id)
         if not row:
             return jsonify({'message': 'error', 'context': 'not found'})
+        event_id = row[0]
+        seats_event = row[6]
+        remaining = LibraryDB.calcRemainingSeats(event_id, seats_event)
         return jsonify({
             "event_id": row[0],
             "name_event": row[1],
@@ -33,7 +36,8 @@ def get_event():
             "program_event": row[11],
             "fullDescription_event": row[12],
             "is_active": row[13],
-            "created_by": row[14]
+            "created_by": row[14],
+            "remaining_seats": remaining
         })
     except ValidationError:
         return jsonify({'message': 'error', 'context': 'bad fields'})

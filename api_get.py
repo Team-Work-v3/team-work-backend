@@ -13,6 +13,9 @@ def get_events():
     if 'state' in request.args.keys():
         if request.args['state'] == 'back':
             for row in rows:
+                event_id = row[0]
+                seats_event = row[6]
+                remaining = LibraryDB.calcRemainingSeats(event_id, seats_event)
                 if datetime.datetime.strptime(row[3] + row[4], '%Y-%m-%d%H:%M') <= datetime.datetime.now():
                     result.append({
                         "event_id": row[0],
@@ -29,12 +32,17 @@ def get_events():
                         "program_event": row[11],
                         "fullDescription_event": row[12],
                         "is_active": row[13],
-                        "created_by": row[14]
+                        "created_by": row[14],
+                        "remaining_seats": remaining
                     })
 
         elif request.args['state'] == 'next':
             for row in rows:
+
                 if datetime.datetime.strptime(row[3] + row[4], '%Y-%m-%d%H:%M') > datetime.datetime.now():
+                    event_id = row[0]
+                    seats_event = row[6]
+                    remaining = LibraryDB.calcRemainingSeats(event_id, seats_event)
                     result.append({
                         "event_id": row[0],
                         "name_event": row[1],
@@ -50,11 +58,15 @@ def get_events():
                         "program_event": row[11],
                         "fullDescription_event": row[12],
                         "is_active": row[13],
-                        "created_by": row[14]
+                        "created_by": row[14],
+                        "remaining_seats": remaining
                     })
 
     else:
         for row in rows:
+            event_id = row[0]
+            seats_event = row[6]
+            remaining = LibraryDB.calcRemainingSeats(event_id, seats_event)
             result.append({
                 "event_id": row[0],
                 "name_event": row[1],
@@ -70,7 +82,8 @@ def get_events():
                 "program_event": row[11],
                 "fullDescription_event": row[12],
                 "is_active": row[13],
-                "created_by": row[14]
+                "created_by": row[14],
+                "remaining_seats": remaining
             })
 
     return jsonify({"events": result})
@@ -113,6 +126,9 @@ def get_shortened_events():
         if request.args['state'] == 'back':
             for row in rows:
                 if datetime.datetime.strptime(row[3] + row[4], '%Y-%m-%d%H:%M') <= datetime.datetime.now():
+                    event_id = row[0]
+                    seats_event = row[6]
+                    remaining = LibraryDB.calcRemainingSeats(event_id, seats_event)
                     result.append({
                         "event_id": row[0],
                         "name_event": row[1],
@@ -122,11 +138,15 @@ def get_shortened_events():
                         "event_category": row[8],
                         "images_events": row[9],
                         "is_active": row[13],
+                        "remaining_seats":remaining
                     })
 
         elif request.args['state'] == 'next':
             for row in rows:
                 if datetime.datetime.strptime(row[3] + row[4], '%Y-%m-%d%H:%M') > datetime.datetime.now():
+                    event_id = row[0]
+                    seats_event = row[6]
+                    remaining = LibraryDB.calcRemainingSeats(event_id, seats_event)
                     result.append({
                         "event_id": row[0],
                         "name_event": row[1],
@@ -136,10 +156,14 @@ def get_shortened_events():
                         "event_category": row[8],
                         "images_events": row[9],
                         "is_active": row[13],
+                        "remaining_seats":remaining
                     })
 
     else:
         for row in rows:
+            event_id = row[0]
+            seats_event = row[6]
+            remaining = LibraryDB.calcRemainingSeats(event_id, seats_event)
             result.append({
                 "event_id": row[0],
                 "name_event": row[1],
@@ -149,6 +173,7 @@ def get_shortened_events():
                 "event_category": row[8],
                 "images_events": row[9],
                 "is_active": row[13],
+                "remaining_seats": remaining
             })
 
     return jsonify({"events": result})
