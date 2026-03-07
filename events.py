@@ -129,7 +129,7 @@ class LibraryDB:
         self.cursor.execute('SELECT COUNT(*) FROM registration WHERE id_event = ?', (event_id,))
         taken = self.cursor.fetchone()[0]
         print(taken)
-        return seats_event - taken
+        return seats_event - int(taken)
 
     def addEvent(self, name_event, description_event, date_event, time_event,
                  location_event, seats_event, price_event, event_category,
