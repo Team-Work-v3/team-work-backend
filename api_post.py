@@ -1,40 +1,21 @@
 from flask import Blueprint, jsonify, request, redirect
 from flask_login import login_required, current_user, login_user
+from pydantic import ValidationError
 from werkzeug.security import check_password_hash
 import secrets
 from events import LibraryDB
 from user_class import User
-from utils import validate_greedy
+from utils import validate_greedy, EventGetModel, EventAddModel
 
 api_post = Blueprint('api_post', __name__, url_prefix='/api')
-
-
-@api_post.route("/checkAdmin", methods=["POST"])
-def check_admin():
-    data = request.get_json()
-    to_check = [('login', str), ('password', str)]
-    if validate_greedy(to_check, data):
-        user_in_db = LibraryDB().getUserByLogin(data['login'])
-        if not user_in_db:
-            return jsonify({'message': 'error', 'context': 'not found'})
-        elif not check_password_hash(user_in_db[2], data['password']):
-            return jsonify({'message': 'error', 'context': 'wrong password'})
-        else:
-            user_to_login = User(db_user=user_in_db)
-            remember = 'device' in request.form.keys()
-            login_user(user_to_login, remember=remember)
-            return jsonify({'message': 'success'})
-    else:
-        return jsonify({'message': 'error', 'context': 'missing fields'})
 
 
 @api_post.route("/getEvent", methods=["POST"])
 def get_event():
     data = request.get_json()
-    print(data)
-    to_check = [('id', int)]
-    if validate_greedy(to_check, data, False):
-        row = LibraryDB().getEvent(data['id'])
+    try:
+        event_data = EventGetModel(**data)
+        row = LibraryDB().getEvent(event_data.id)
         if not row:
             return jsonify({'message': 'error', 'context': 'not found'})
         return jsonify({
@@ -54,19 +35,17 @@ def get_event():
             "is_active": row[13],
             "created_by": row[14]
         })
-    else:
-        return jsonify({'message': 'error', 'context': 'missing fields'})
+    except ValidationError:
+        return jsonify({'message': 'error', 'context': 'bad fields'})
 
 
 @api_post.route("/addEvents", methods=["POST"])
 @login_required
 def add_event():
     data = request.get_json()
-    to_check = [
-        ('name_event', str), ('date_event', str), ('seats_event', int),
-        ('price_event', float), ('event_category', str), ('images_events', str)
-    ]
-    if validate_greedy(to_check, data):
+    try:
+        event_data = EventAddModel(**data)
+        print(event_data.model_fields)
         LibraryDB().addEvent(
             data['name_event'],
             data.get('description_event'),
@@ -84,7 +63,7 @@ def add_event():
             True
         )
         return jsonify({'message': 'success'})
-    else:
+    except ValidationError:
         return jsonify({'message': 'error', 'context': 'missing fields'})
 
 

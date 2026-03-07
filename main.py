@@ -1,20 +1,22 @@
 from flask import Flask, render_template, request, redirect, send_file
-from werkzeug.security import generate_password_hash, check_password_hash
+from werkzeug.security import check_password_hash
 from flask_login import LoginManager, login_user, login_required, current_user, logout_user
 import logging
-import secrets
+from logging.handlers import RotatingFileHandler
+from pydantic import ValidationError
+
 from user_class import User
 from events import LibraryDB
 from api_post import api_post
 from api_get import api_get
 from temp_points import temp_points
-from utils import validate_greedy
+from utils import RegModel
 
 www_path = 'www'
 app = Flask(__name__, static_folder=www_path, static_url_path="", template_folder=www_path)
 app.config["SECRET_KEY"] = "o8pjag5ny;o32g42vonny8libtfukjyj,gyukfyfkufyulgyuk"
 werkzeug_logger = logging.getLogger('werkzeug')
-werkzeug_logger.addHandler(logging.FileHandler('logs.log'))
+werkzeug_logger.addHandler(RotatingFileHandler('logs.log', maxBytes=10*1024*1024))
 werkzeug_logger.addHandler(logging.StreamHandler())
 
 login_manager = LoginManager(app)
@@ -48,26 +50,21 @@ def admin():
 
 @app.route("/admin/login", methods=['GET', 'POST'])
 def admin_login():
-    if request.method == "POST":
-        to_check = [('login', str), ('password', str)]
-        if validate_greedy(to_check, request.form):
-            user_in_db = LibraryDB().getUserByLogin(request.form['login'])
+    if request.method == 'POST':
+        try:
+            user_data = RegModel(**request.form)
+            user_in_db = LibraryDB().getUserByLogin(user_data.login)
             if not user_in_db:
                 return render_template("login.html", errors=True)
-                # flash("Такого пользователя нет")
-                # print("none")
-            elif not check_password_hash(user_in_db[2], request.form['password']):
+            elif not check_password_hash(user_in_db[2], user_data.password):
                 return render_template("login.html", errors=True)
-                # flash("Неверный пароль")
-                # print(user_in_db[2], request.form['password'])
             else:
                 user_to_login = User(db_user=user_in_db)
                 remember = 'device' in request.form.keys()
                 login_user(user_to_login, remember=remember)
                 return redirect("/admin")
-        else:
-            pass
-            # flash("Не все поля заполнены")
+        except ValidationError:
+            return render_template("login.html", errors=True)
     return render_template("login.html", errors=False)
 
 
@@ -107,9 +104,9 @@ def admin_other():
 def index(eid=''):
     return render_template("index/index.html")
 
-@app.route("/admin/change-event/<id>")
-def change_event(id):
-    return render_template("admin/change-event.html", event_id=id)
+@app.route("/admin/change-event/<eid>")
+def change_event(eid):
+    return render_template("admin/change-event.html", event_id=eid)
 
 @app.route("/images/<name>")
 def prev_photo(name):
