@@ -46,7 +46,6 @@ def get_reviews():
     return jsonify({"reviews": result})
 
 @api_get.route("/getCategory", methods=["GET"])
-@login_required
 def get_category():
     rows = LibraryDB().getCategory()
     result = []
@@ -106,7 +105,6 @@ def get_shortened_events():
     return jsonify({"events": result})
 
 @api_get.route("/getCategoryNew", methods=["GET"])
-@login_required
 def get_category_new():
     rows = LibraryDB().getCategory()
     result = {}
