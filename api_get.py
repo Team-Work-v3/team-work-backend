@@ -22,15 +22,14 @@ def get_events():
                         "time_event": row[4],
                         "location_event": row[5],
                         "seats_event": row[6],
-                        "remaining_seats": row[7],
-                        "price_event": row[8],
-                        "event_category": row[9],
-                        "images_events": row[10],
-                        "organizers_event": row[11],
-                        "program_event": row[12],
-                        "fullDescription_event": row[13],
-                        "is_active": row[14],
-                        "created_by": row[15]
+                        "price_event": row[7],
+                        "event_category": row[8],
+                        "images_events": row[9],
+                        "organizers_event": row[10],
+                        "program_event": row[11],
+                        "fullDescription_event": row[12],
+                        "is_active": row[13],
+                        "created_by": row[14]
                     })
 
         elif request.args['state'] == 'next':
@@ -44,15 +43,14 @@ def get_events():
                         "time_event": row[4],
                         "location_event": row[5],
                         "seats_event": row[6],
-                        "remaining_seats": row[7],
-                        "price_event": row[8],
-                        "event_category": row[9],
-                        "images_events": row[10],
-                        "organizers_event": row[11],
-                        "program_event": row[12],
-                        "fullDescription_event": row[13],
-                        "is_active": row[14],
-                        "created_by": row[15]
+                        "price_event": row[7],
+                        "event_category": row[8],
+                        "images_events": row[9],
+                        "organizers_event": row[10],
+                        "program_event": row[11],
+                        "fullDescription_event": row[12],
+                        "is_active": row[13],
+                        "created_by": row[14]
                     })
 
     else:
@@ -65,15 +63,14 @@ def get_events():
                 "time_event": row[4],
                 "location_event": row[5],
                 "seats_event": row[6],
-                "remaining_seats": row[7],
-                "price_event": row[8],
-                "event_category": row[9],
-                "images_events": row[10],
-                "organizers_event": row[11],
-                "program_event": row[12],
-                "fullDescription_event": row[13],
-                "is_active": row[14],
-                "created_by": row[15]
+                "price_event": row[7],
+                "event_category": row[8],
+                "images_events": row[9],
+                "organizers_event": row[10],
+                "program_event": row[11],
+                "fullDescription_event": row[12],
+                "is_active": row[13],
+                "created_by": row[14]
             })
 
     return jsonify({"events": result})
@@ -94,6 +91,7 @@ def get_reviews():
         })
     return jsonify({"reviews": result})
 
+
 @api_get.route("/getCategory", methods=["GET"])
 def get_category():
     rows = LibraryDB().getCategory()
@@ -105,10 +103,12 @@ def get_category():
         })
     return jsonify({"category": result})
 
+
 @api_get.route("/getShortenedEvents", methods=["GET"])
 def get_shortened_events():
     rows = LibraryDB().getEvents()
     result = []
+
     if 'state' in request.args.keys():
         if request.args['state'] == 'back':
             for row in rows:
@@ -118,12 +118,12 @@ def get_shortened_events():
                         "name_event": row[1],
                         "date_event": row[3],
                         "time_event": row[4],
-                        "remaining_seats": row[7],
-                        "price_event": row[8],
-                        "event_category": row[9],
-                        "images_events": row[10],
-                        "is_active": row[14],
+                        "price_event": row[7],
+                        "event_category": row[8],
+                        "images_events": row[9],
+                        "is_active": row[13],
                     })
+
         elif request.args['state'] == 'next':
             for row in rows:
                 if datetime.datetime.strptime(row[3] + row[4], '%Y-%m-%d%H:%M') > datetime.datetime.now():
@@ -132,12 +132,12 @@ def get_shortened_events():
                         "name_event": row[1],
                         "date_event": row[3],
                         "time_event": row[4],
-                        "remaining_seats": row[7],
-                        "price_event": row[8],
-                        "event_category": row[9],
-                        "images_events": row[10],
-                        "is_active": row[14],
+                        "price_event": row[7],
+                        "event_category": row[8],
+                        "images_events": row[9],
+                        "is_active": row[13],
                     })
+
     else:
         for row in rows:
             result.append({
@@ -145,13 +145,14 @@ def get_shortened_events():
                 "name_event": row[1],
                 "date_event": row[3],
                 "time_event": row[4],
-                "remaining_seats": row[7],
-                "price_event": row[8],
-                "event_category": row[9],
-                "images_events": row[10],
-                "is_active": row[14],
+                "price_event": row[7],
+                "event_category": row[8],
+                "images_events": row[9],
+                "is_active": row[13],
             })
+
     return jsonify({"events": result})
+
 
 @api_get.route("/getCategoryNew", methods=["GET"])
 def get_category_new():
@@ -173,15 +174,15 @@ def get_users():
         result.append({
             "id_event": row[1],
             "full_name": row[2],
-            'email': row[3],
-            'phone_number': row[4],
-            'agreement': row[5]
+            "email": row[3],
+            "phone_number": row[4],
+            "agreement": row[5]
         })
     return jsonify({"events": result})
+
 
 @api_get.route("/getUsersInEvents", methods=["GET"])
 @login_required
 def get_users_in_events():
     result = LibraryDB().getUsersInEvents()
     return jsonify({"events": result})
-

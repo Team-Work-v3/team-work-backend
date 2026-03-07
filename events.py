@@ -25,7 +25,6 @@ class LibraryDBCreator:
                                 time_event TEXT NOT NULL,
                                 location_event TEXT NOT NULL,
                                 seats_event INTEGER NOT NULL,
-                                remaining_seats INTEGER NOT NULL,
                                 price_event REAL NOT NULL,
                                 event_category TEXT,
                                 images_events TEXT,
@@ -133,12 +132,12 @@ class LibraryDB:
         self.cursor.execute('''
                     INSERT INTO events (
                         name_event, description_event, date_event, time_event,
-                        location_event, seats_event, remaining_seats, price_event, event_category,
+                        location_event, seats_event, price_event, event_category,
                         images_events, organizers_event, program_event,
                         fullDescription_event, is_active, created_by
                     ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 ''', (name_event, description_event, date_event, time_event,
-                      location_event, seats_event, seats_event, price_event, event_category,
+                      location_event, seats_event, price_event, event_category,
                       images_events, organizers_event, program_event,
                       fullDescription_event, is_active, created_by))
         self.connector.commit()
@@ -156,7 +155,7 @@ class LibraryDB:
     def getEvents(self):
         rows = self.cursor.execute('''
             SELECT event_id, name_event, description_event, date_event, time_event,
-                   location_event, seats_event, remaining_seats, price_event,
+                   location_event, seats_event, price_event,
                    event_category, images_events, organizers_event, program_event,
                    fullDescription_event, is_active, created_by
             FROM events
@@ -242,47 +241,20 @@ class LibraryDB:
         return rows
 
     def addRegistration(self, id_event, full_name, email, phone_number, agreement, ticket_amount, confirmation):
-        self.cursor.execute('SELECT remaining_seats FROM events WHERE event_id = ?', (id_event,))
-        result = self.cursor.fetchone()
-
-        if not result:
-            return False
-
-        remaining = result[0]
-
-        if remaining < ticket_amount:
-            return False
-
         self.cursor.execute('''
             INSERT INTO registration (
                 id_event, full_name, email, phone_number, agreement, ticket_amount, confirmation
             ) VALUES (?, ?, ?, ?, ?, ?, ?)
         ''', (id_event, full_name, email, phone_number, agreement, ticket_amount, confirmation))
 
-        self.cursor.execute('''
-            UPDATE events SET remaining_seats = remaining_seats - ?
-            WHERE event_id = ?
-        ''', (ticket_amount, id_event))
-
         self.connector.commit()
         return True
 
     def deleteRegistration(self, id_registration):
-        self.cursor.execute('SELECT id_event, ticket_amount FROM registration WHERE id_registration = ?',
-                            (id_registration,))
-        result = self.cursor.fetchone()
-
-        if not result:
-            return False
-
-        event_id, ticket_amount = result
-
-        self.cursor.execute('DELETE FROM registration WHERE id_registration = ?', (id_registration,))
-
-        self.cursor.execute('''
-            UPDATE events SET remaining_seats = remaining_seats + ?
-            WHERE event_id = ?
-        ''', (ticket_amount, event_id))
+        self.cursor.execute(
+            'DELETE FROM registration WHERE id_registration = ?',
+            (id_registration,)
+        )
 
         self.connector.commit()
         return True

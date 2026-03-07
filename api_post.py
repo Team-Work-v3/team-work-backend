@@ -26,15 +26,14 @@ def get_event():
             "time_event": row[4],
             "location_event": row[5],
             "seats_event": row[6],
-            "remaining_seats": row[7],
-            "price_event": row[8],
-            "event_category": row[9],
-            "images_events": row[10],
-            "organizers_event": row[11],
-            "program_event": row[12],
-            "fullDescription_event": row[13],
-            "is_active": row[14],
-            "created_by": row[15]
+            "price_event": row[7],
+            "event_category": row[8],
+            "images_events": row[9],
+            "organizers_event": row[10],
+            "program_event": row[11],
+            "fullDescription_event": row[12],
+            "is_active": row[13],
+            "created_by": row[14]
         })
     except ValidationError:
         return jsonify({'message': 'error', 'context': 'bad fields'})
@@ -46,7 +45,6 @@ def add_event():
     data = request.get_json()
     try:
         event_data = EventAddModel(**data)
-        print(event_data.model_fields)
         LibraryDB().addEvent(
             data['name_event'],
             data.get('description_event'),
@@ -125,13 +123,17 @@ def add_review():
         return jsonify({'message': 'success'})
     else:
         return jsonify({'message': 'error'})
+
+
 @api_post.route("/regUser", methods=["POST"])
 def reg_user():
     data = request.get_json()
     data['confirmation'] = 1
-    print(data)
-    to_check = [('id_event', int), ('full_name', str), ('email', str),
-        ('phone_number', str), ('agreement', int), ('ticket_amount', int), ('confirmation', int)]
+    to_check = [
+        ('id_event', int), ('full_name', str), ('email', str),
+        ('phone_number', str), ('agreement', int),
+        ('ticket_amount', int), ('confirmation', int)
+    ]
     if validate_greedy(to_check, data, True):
         LibraryDB().addRegistration(
             data['id_event'],
@@ -151,18 +153,21 @@ def reg_user():
 @login_required
 def add_events():
     file = request.files['images-events']
-    name='logoEvents.png'
+    name = 'logoEvents.png'
     if file:
         name = f'{secrets.token_hex(16)}.{file.filename.split('.')[-1]}'
         while LibraryDB().getImageByName(name):
             name = f'{secrets.token_hex(16)}.{file.filename.split('.')[-1]}'
         file.save(f'/home/images/{name}')
-    LibraryDB().addEvent(request.form['name_event'], request.form['description_event'],
-                         request.form['date_event'], request.form['time_event'], request.form['location_event'],
-                         request.form['seats_event'], request.form['price_event'], request.form['event_category'],
-                         f"/images/{name}", request.form['organizers_event'], request.form['program_event'],
-                         request.form['fullDescription_event'], 0)
+    LibraryDB().addEvent(
+        request.form['name_event'], request.form['description_event'],
+        request.form['date_event'], request.form['time_event'], request.form['location_event'],
+        request.form['seats_event'], request.form['price_event'], request.form['event_category'],
+        f"/images/{name}", request.form['organizers_event'], request.form['program_event'],
+        request.form['fullDescription_event'], 0
+    )
     return redirect("/admin")
+
 
 @api_post.route("/deleteRegistration", methods=["POST"])
 @login_required
@@ -190,12 +195,15 @@ def edit_events(id):
         while LibraryDB().getImageByName(name):
             name = f'{secrets.token_hex(16)}.{file.filename.split('.')[-1]}'
         file.save(f'/home/images/{name}')
-    LibraryDB().updateEvent(int(id), request.form['name_event'], request.form['description_event'],
-                         request.form['date_event'], request.form['time_event'], request.form['location_event'],
-                         request.form['seats_event'], request.form['price_event'], request.form['event_category'],
-                         f"/images/{name}", request.form['organizers_event'], request.form['program_event'],
-                         request.form['fullDescription_event'], 0)
+    LibraryDB().updateEvent(
+        int(id), request.form['name_event'], request.form['description_event'],
+        request.form['date_event'], request.form['time_event'], request.form['location_event'],
+        request.form['seats_event'], request.form['price_event'], request.form['event_category'],
+        f"/images/{name}", request.form['organizers_event'], request.form['program_event'],
+        request.form['fullDescription_event'], 0
+    )
     return redirect("/admin/events")
+
 
 @api_post.route("/editRegistration", methods=["POST"])
 @login_required
@@ -229,6 +237,7 @@ def edit_registration():
             return jsonify({'message': 'error', 'context': 'not found'})
     else:
         return jsonify({'message': 'error', 'context': 'missing fields'})
+
 
 @api_post.route("/deleteReview", methods=["POST"])
 @login_required
