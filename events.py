@@ -127,7 +127,7 @@ class LibraryDB:
 
     def calcRemainingSeats(self, event_id, seats_event):
         self.cursor.execute('SELECT COUNT(*) FROM registration WHERE id_event = ?', (event_id,))
-        taken = self.cursor.fetchall()
+        taken = self.cursor.fetchone()[0]
         print(taken)
         return seats_event - taken
 
