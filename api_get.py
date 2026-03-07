@@ -159,7 +159,7 @@ def get_category_new():
     result = {}
 
     for row in rows:
-        result[row[0]] = row[1]
+        result[int(row[0])] = row[1]
 
     return jsonify(result)
 
