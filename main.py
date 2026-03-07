@@ -72,7 +72,7 @@ def admin_login():
 @login_required
 def admin_logout():
     logout_user()
-    return redirect('/admin/login')
+    return redirect('/')
 
 
 @app.route("/admin/events", methods=['GET'])
