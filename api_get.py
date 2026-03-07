@@ -9,26 +9,75 @@ api_get = Blueprint('api_get', __name__, url_prefix='/api')
 def get_events():
     rows = LibraryDB().getEvents()
     result = []
-    for row in rows:
-        result.append({
-            "event_id": row[0],
-            "name_event": row[1],
-            "description_event": row[2],
-            "date_event": row[3],
-            "time_event": row[4],
-            "location_event": row[5],
-            "seats_event": row[6],
-            "remaining_seats": row[7],
-            "price_event": row[8],
-            "event_category": row[9],
-            "images_events": row[10],
-            "organizers_event": row[11],
-            "program_event": row[12],
-            "fullDescription_event": row[13],
-            "is_active": row[14],
-            "created_by": row[15]
-        })
+
+    if 'state' in request.args.keys():
+        if request.args['state'] == 'back':
+            for row in rows:
+                if datetime.datetime.strptime(row[3] + row[4], '%Y-%m-%d%H:%M') <= datetime.datetime.now():
+                    result.append({
+                        "event_id": row[0],
+                        "name_event": row[1],
+                        "description_event": row[2],
+                        "date_event": row[3],
+                        "time_event": row[4],
+                        "location_event": row[5],
+                        "seats_event": row[6],
+                        "remaining_seats": row[7],
+                        "price_event": row[8],
+                        "event_category": row[9],
+                        "images_events": row[10],
+                        "organizers_event": row[11],
+                        "program_event": row[12],
+                        "fullDescription_event": row[13],
+                        "is_active": row[14],
+                        "created_by": row[15]
+                    })
+
+        elif request.args['state'] == 'next':
+            for row in rows:
+                if datetime.datetime.strptime(row[3] + row[4], '%Y-%m-%d%H:%M') > datetime.datetime.now():
+                    result.append({
+                        "event_id": row[0],
+                        "name_event": row[1],
+                        "description_event": row[2],
+                        "date_event": row[3],
+                        "time_event": row[4],
+                        "location_event": row[5],
+                        "seats_event": row[6],
+                        "remaining_seats": row[7],
+                        "price_event": row[8],
+                        "event_category": row[9],
+                        "images_events": row[10],
+                        "organizers_event": row[11],
+                        "program_event": row[12],
+                        "fullDescription_event": row[13],
+                        "is_active": row[14],
+                        "created_by": row[15]
+                    })
+
+    else:
+        for row in rows:
+            result.append({
+                "event_id": row[0],
+                "name_event": row[1],
+                "description_event": row[2],
+                "date_event": row[3],
+                "time_event": row[4],
+                "location_event": row[5],
+                "seats_event": row[6],
+                "remaining_seats": row[7],
+                "price_event": row[8],
+                "event_category": row[9],
+                "images_events": row[10],
+                "organizers_event": row[11],
+                "program_event": row[12],
+                "fullDescription_event": row[13],
+                "is_active": row[14],
+                "created_by": row[15]
+            })
+
     return jsonify({"events": result})
+
 
 @api_get.route("/getAllReviews", methods=["GET"])
 def get_reviews():
