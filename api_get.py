@@ -15,7 +15,7 @@ def get_events():
             for row in rows:
                 event_id = row[0]
                 seats_event = row[6]
-                remaining = LibraryDB.calcRemainingSeats(event_id, seats_event)
+                remaining = LibraryDB().calcRemainingSeats(event_id, seats_event)
                 if datetime.datetime.strptime(row[3] + row[4], '%Y-%m-%d%H:%M') <= datetime.datetime.now():
                     result.append({
                         "event_id": row[0],
@@ -42,7 +42,7 @@ def get_events():
                 if datetime.datetime.strptime(row[3] + row[4], '%Y-%m-%d%H:%M') > datetime.datetime.now():
                     event_id = row[0]
                     seats_event = row[6]
-                    remaining = LibraryDB.calcRemainingSeats(event_id, seats_event)
+                    remaining = LibraryDB().calcRemainingSeats(event_id, seats_event)
                     result.append({
                         "event_id": row[0],
                         "name_event": row[1],
@@ -66,7 +66,7 @@ def get_events():
         for row in rows:
             event_id = row[0]
             seats_event = row[6]
-            remaining = LibraryDB.calcRemainingSeats(event_id, seats_event)
+            remaining = LibraryDB().calcRemainingSeats(event_id, seats_event)
             result.append({
                 "event_id": row[0],
                 "name_event": row[1],
@@ -128,7 +128,7 @@ def get_shortened_events():
                 if datetime.datetime.strptime(row[3] + row[4], '%Y-%m-%d%H:%M') <= datetime.datetime.now():
                     event_id = row[0]
                     seats_event = row[6]
-                    remaining = LibraryDB.calcRemainingSeats(event_id, seats_event)
+                    remaining = LibraryDB().calcRemainingSeats(event_id, seats_event)
                     result.append({
                         "event_id": row[0],
                         "name_event": row[1],
@@ -146,7 +146,7 @@ def get_shortened_events():
                 if datetime.datetime.strptime(row[3] + row[4], '%Y-%m-%d%H:%M') > datetime.datetime.now():
                     event_id = row[0]
                     seats_event = row[6]
-                    remaining = LibraryDB.calcRemainingSeats(event_id, seats_event)
+                    remaining = LibraryDB().calcRemainingSeats(event_id, seats_event)
                     result.append({
                         "event_id": row[0],
                         "name_event": row[1],
@@ -163,7 +163,7 @@ def get_shortened_events():
         for row in rows:
             event_id = row[0]
             seats_event = row[6]
-            remaining = LibraryDB.calcRemainingSeats(event_id, seats_event)
+            remaining = LibraryDB().calcRemainingSeats(event_id, seats_event)
             result.append({
                 "event_id": row[0],
                 "name_event": row[1],

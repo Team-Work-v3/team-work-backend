@@ -20,7 +20,7 @@ def get_event():
             return jsonify({'message': 'error', 'context': 'not found'})
         event_id = row[0]
         seats_event = row[6]
-        remaining = LibraryDB.calcRemainingSeats(event_id, seats_event)
+        remaining = LibraryDB().calcRemainingSeats(event_id, seats_event)
         return jsonify({
             "event_id": row[0],
             "name_event": row[1],
