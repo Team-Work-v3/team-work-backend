@@ -156,8 +156,8 @@ class LibraryDB:
     def getEvents(self):
         rows = self.cursor.execute('''
             SELECT event_id, name_event, description_event, date_event, time_event,
-                   location_event, seats_event, price_event, event_category,
-                   images_events, organizers_event, program_event,
+                   location_event, seats_event, remaining_seats, price_event,
+                   event_category, images_events, organizers_event, program_event,
                    fullDescription_event, is_active, created_by
             FROM events
         ''').fetchall()
