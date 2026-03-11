@@ -1,10 +1,8 @@
 from flask import Blueprint, jsonify, request, redirect
-from flask_login import login_required, current_user, login_user
+from flask_login import login_required, current_user
 from pydantic import ValidationError
-from werkzeug.security import check_password_hash
 import secrets
 from events import LibraryDB
-from user_class import User
 from utils import validate_greedy, EventGetModel, EventAddModel
 
 api_post = Blueprint('api_post', __name__, url_prefix='/api')

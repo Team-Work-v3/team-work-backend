@@ -42,12 +42,6 @@ def load_user(user_id):
     return User(user_id, LibraryDB())
 
 
-@app.route("/admin", methods=['GET'])
-@login_required
-def admin():
-    return render_template("admin/events.html")
-
-
 @app.route("/admin/login", methods=['GET', 'POST'])
 def admin_login():
     if request.method == 'POST':
@@ -72,7 +66,19 @@ def admin_login():
 @login_required
 def admin_logout():
     logout_user()
-    return redirect('/')
+    return redirect('/admin/login')
+
+
+@app.route("/admin", methods=['GET'])
+@login_required
+def admin():
+    return render_template("admin/events.html")
+
+
+@app.route("/admin/add", methods=['GET'])
+@login_required
+def admin_add():
+    return render_template("admin/add.html")
 
 
 @app.route("/admin/events", methods=['GET'])
