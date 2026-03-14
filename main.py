@@ -104,6 +104,7 @@ def admin_members():
 def admin_other():
     return render_template("admin/other.html")
 
+
 @app.route("/admin/reviews", methods=['GET'])
 @login_required
 def admin_reviews():
@@ -114,6 +115,19 @@ def admin_reviews():
 @login_required
 def admin_gallery():
     return render_template("admin/gallery.html")
+
+
+@app.route("/admin/addreviews", methods=['GET'])
+@login_required
+def admin_addreviews():
+    return render_template("admin/addreviews.html")
+
+
+@app.route("/admin/archive", methods=['GET'])
+@login_required
+def admin_archive():
+    return render_template("admin/archive.html")
+
 
 @app.route("/")
 @app.route("/index")
