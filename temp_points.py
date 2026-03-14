@@ -17,3 +17,8 @@ def get_Mentor(filelink):
     path = "/home/images/mentors/" + filelink
     print(path)
     return send_file(path, as_attachment=False)
+
+@temp_points.route("/getMentor/<filelink>", methods=["GET"])
+def get_Logo(filelink):
+    path = "/home/images/logo/" + filelink
+    return send_file(path, as_attachment=False)
