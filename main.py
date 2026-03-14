@@ -104,6 +104,17 @@ def admin_members():
 def admin_other():
     return render_template("admin/other.html")
 
+@app.route("/admin/reviews", methods=['GET'])
+@login_required
+def admin_reviews():
+    return render_template("admin/reviews.html")
+
+
+@app.route("/admin/gallery", methods=['GET'])
+@login_required
+def admin_gallery():
+    return render_template("admin/gallery.html")
+
 @app.route("/")
 @app.route("/index")
 @app.route("/event/<eid>")
