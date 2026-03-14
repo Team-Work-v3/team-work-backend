@@ -18,7 +18,7 @@ def get_Mentor(filelink):
     print(path)
     return send_file(path, as_attachment=False)
 
-@temp_points.route("/getMentor/<filelink>", methods=["GET"])
+@temp_points.route("/getLogo/<filelink>", methods=["GET"])
 def get_Logo(filelink):
     path = "/home/images/logo/" + filelink
     return send_file(path, as_attachment=False)
