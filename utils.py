@@ -10,9 +10,9 @@ class EventGetModel(BaseModel):
 class EventAddModel(BaseModel):
     name_event: str = Field(min_length=5, max_length=300)
     description_event: str = Field(min_length=5, max_length=500)
-    date_event: str = Field(min_length=3, max_length=300)
-    time_event: str = Field(min_length=5, max_length=300)
-    location_event: str = Field(min_length=5, max_length=300, default='')
+    date_event: str = Field(min_length=1, max_length=300)
+    time_event: str = Field(min_length=1, max_length=300)
+    location_event: str = Field(min_length=1, max_length=300, default='')
     seats_event: int = Field(default=0)
     price_event: float = Field(default=0)
     event_category: str = Field(default='')
@@ -20,6 +20,8 @@ class EventAddModel(BaseModel):
     organizers_event: str = Field(max_length=300, default='')
     program_event: str = Field(max_length=500, default='')
     fullDescription_event: str = Field(min_length=5, max_length=1000)
+    created_by: int
+    is_active: bool
 
 
 

@@ -12,7 +12,7 @@ api_post = Blueprint('api_post', __name__, url_prefix='/api')
 def get_event():
     data = request.get_json()
     try:
-        event_data = EventGetModel(**data)
+        event_data = EventGetModel.model_validate(data)
         row = LibraryDB().getEvent(event_data.id)
         if not row:
             return jsonify({'message': 'error', 'context': 'not found'})
@@ -41,31 +41,42 @@ def get_event():
         return jsonify({'message': 'error', 'context': 'bad fields'})
 
 
-@api_post.route("/addEvents", methods=["POST"])
+# @api_post.route("/addEvents", methods=["POST"])
+# @login_required
+# def add_event():
+#     data = request.get_json()
+#     try:
+#         data['created_by'] = current_user.user[0]
+#         data['is_active'] = True
+#         event_data = EventAddModel.model_validate(data)
+#         print(event_data.model_dump())
+#         LibraryDB().addEvent(**event_data.model_dump())
+#         return jsonify({'message': 'success'})
+#     except ValidationError:
+#         return jsonify({'message': 'error', 'context': 'missing fields'})
+
+
+@api_post.route("/addEventsForm", methods=["POST"])
 @login_required
-def add_event():
-    data = request.get_json()
+def add_events():
+    data = request.form.to_dict()
     try:
-        event_data = EventAddModel(**data)
-        LibraryDB().addEvent(
-            data['name_event'],
-            data.get('description_event'),
-            data['date_event'],
-            data['time_event'],
-            data.get('location_event', ''),
-            data['seats_event'],
-            data['price_event'],
-            data['event_category'],
-            data['images_events'],
-            data.get('organizers_event', ''),
-            data.get('program_event', ''),
-            data.get('fullDescription_event', ''),
-            current_user.user[0],
-            True
-        )
-        return jsonify({'message': 'success'})
+        data['created_by'] = current_user.user[0]
+        data['is_active'] = True
+        file = request.files['images-events']
+        if file:
+            name = 'logoEvents.png'
+            if file:
+                name = f'{secrets.token_hex(16)}.{file.filename.split('.')[-1]}'
+                while LibraryDB().getImageByName(name):
+                    name = f'{secrets.token_hex(16)}.{file.filename.split('.')[-1]}'
+                file.save(f'/home/images/{name}')
+            data['images-events'] = f"/images/{name}"
+        event_data = EventAddModel.model_validate(data)
+        LibraryDB().addEvent(**event_data.model_dump())
+        return redirect("/admin")
     except ValidationError:
-        return jsonify({'message': 'error', 'context': 'missing fields'})
+        return redirect("/admin/add")
 
 
 @api_post.route("/editEvents", methods=["POST"])
@@ -149,26 +160,6 @@ def reg_user():
         return jsonify({'message': 'success'})
     else:
         return jsonify({'message': 'error', 'context': 'missing fields'})
-
-
-@api_post.route("/addEventsForm", methods=["POST"])
-@login_required
-def add_events():
-    file = request.files['images-events']
-    name = 'logoEvents.png'
-    if file:
-        name = f'{secrets.token_hex(16)}.{file.filename.split('.')[-1]}'
-        while LibraryDB().getImageByName(name):
-            name = f'{secrets.token_hex(16)}.{file.filename.split('.')[-1]}'
-        file.save(f'/home/images/{name}')
-    LibraryDB().addEvent(
-        request.form['name_event'], request.form['description_event'],
-        request.form['date_event'], request.form['time_event'], request.form['location_event'],
-        request.form['seats_event'], request.form['price_event'], request.form['event_category'],
-        f"/images/{name}", request.form['organizers_event'], request.form['program_event'],
-        request.form['fullDescription_event'], 0
-    )
-    return redirect("/admin")
 
 
 @api_post.route("/deleteRegistration", methods=["POST"])
